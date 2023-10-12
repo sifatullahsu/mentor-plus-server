@@ -1,8 +1,10 @@
 import { ErrorRequestHandler } from 'express'
 import mongoose from 'mongoose'
+import { ZodError } from 'zod'
 import ApiError from '../../error/ApiError'
 import handleCastError from '../../error/handleCastError'
 import handleValidationError from '../../error/handleValidationError'
+import handleZodError from '../../error/handleZodError'
 
 type iErrorMessages = {
   path: string | number
@@ -24,6 +26,11 @@ const errorHandler: ErrorRequestHandler = (error, req, res, next) => {
   } else if (error instanceof mongoose.Error.ValidationError) {
     const simplified = handleValidationError(error)
     status = simplified.status
+    message = simplified.message
+    errorMessages = simplified.errorMessages
+  } else if (error instanceof ZodError) {
+    const simplified = handleZodError(error)
+    status = simplified.statusCode
     message = simplified.message
     errorMessages = simplified.errorMessages
   } else if (error instanceof ApiError) {
