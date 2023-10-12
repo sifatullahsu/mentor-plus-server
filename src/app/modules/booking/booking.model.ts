@@ -1,6 +1,6 @@
 import { Schema, model } from 'mongoose'
 import { xBookingStatus, xHours } from '../../../global/constant'
-import { categoryIdentity, expertiseIdentity, topicIdentity, userIdentity } from '../../../identity/model'
+import { categoryIdentity, expertiseIdentity, topicIdentity, userIdentity } from '../../identity/model'
 import { iBooking, iBookingModel } from './booking.interface'
 
 const bookingSchema = new Schema<iBooking, iBookingModel>(

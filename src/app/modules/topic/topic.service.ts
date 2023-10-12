@@ -1,6 +1,6 @@
 import transformObject from '../../../helper/transformObject'
 import { iTopic } from './topic.interface'
-import Topic from './topic.mode'
+import Topic from './topic.model'
 
 export const createTopicDB = async (data: iTopic): Promise<iTopic> => {
   const result = await Topic.create(data)

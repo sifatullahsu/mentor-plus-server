@@ -1,6 +1,6 @@
 import transformObject from '../../../helper/transformObject'
 import { iCategory } from './category.interface'
-import Category from './category.mode'
+import Category from './category.model'
 
 export const createCategoryDB = async (data: iCategory): Promise<iCategory> => {
   const result = await Category.create(data)

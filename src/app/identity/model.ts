@@ -1,5 +1,5 @@
 import { Schema } from 'mongoose'
-import { xRole } from '../global/constant'
+import { xRole } from '../../global/constant'
 import { iCategoryIdentity, iExpertiseIdentity, iTopicIdentity, iUserIdentity } from './interface'
 
 export const userIdentity = new Schema<iUserIdentity>(

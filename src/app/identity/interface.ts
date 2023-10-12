@@ -1,4 +1,4 @@
-import { iId, iName, iRole } from '../global/interface'
+import { iId, iName, iRole } from '../../global/interface'
 
 export type iUserIdentity = {
   username: string

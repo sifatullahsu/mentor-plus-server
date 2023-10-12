@@ -1,8 +1,8 @@
-import Category from '../app/modules/category/category.mode'
-import Expertise from '../app/modules/expertise/expertise.mode'
-import Topic from '../app/modules/topic/topic.mode'
-import User from '../app/modules/user/user.mode'
-import { iId } from '../global/interface'
+import { iId } from '../../global/interface'
+import Category from '../modules/category/category.model'
+import Expertise from '../modules/expertise/expertise.model'
+import Topic from '../modules/topic/topic.model'
+import User from '../modules/user/user.model'
 import { iCategoryIdentity, iExpertiseIdentity, iTopicIdentity, iUserIdentity } from './interface'
 
 export const getUserIdentity = async (id: iId): Promise<iUserIdentity | null> => {

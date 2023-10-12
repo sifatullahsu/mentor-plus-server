@@ -1,6 +1,6 @@
 import transformObject from '../../../helper/transformObject'
 import { iExpertise } from './expertise.interface'
-import Expertise from './expertise.mode'
+import Expertise from './expertise.model'
 
 export const createExpertiseDB = async (data: iExpertise): Promise<iExpertise> => {
   const result = await Expertise.create(data)

@@ -1,6 +1,6 @@
 import transformObject from '../../../helper/transformObject'
 import { iUser } from './user.interface'
-import User from './user.mode'
+import User from './user.model'
 
 export const getUsersDB = async (): Promise<iUser[] | null> => {
   const result = await User.find({})

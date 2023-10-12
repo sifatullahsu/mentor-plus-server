@@ -5,7 +5,7 @@ import {
   iExpertiseIdentity,
   iTopicIdentity,
   iUserIdentity
-} from '../../../identity/interface'
+} from '../../identity/interface'
 
 export type iBooking = {
   expertise: iId

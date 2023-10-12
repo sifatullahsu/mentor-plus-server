@@ -3,7 +3,7 @@ import config from '../../../config'
 import ApiError from '../../../error/ApiError'
 import { createToken, verifyToken } from '../../../helper/jwtHelper'
 import { iUser } from '../user/user.interface'
-import User from '../user/user.mode'
+import User from '../user/user.model'
 import { iAuth, iLoginReqData, iRefreshTokenReturn } from './auth.interface'
 
 export const registerUserDB = async (data: iUser): Promise<Partial<iUser>> => {

@@ -6,10 +6,10 @@ import {
   getExpertiseIdentity,
   getTopicIdentity,
   getUserIdentity
-} from '../../../identity/utils'
-import Expertise from '../expertise/expertise.mode'
+} from '../../identity/utils'
+import Expertise from '../expertise/expertise.model'
 import { iBooking } from './booking.interface'
-import Booking from './booking.mode'
+import Booking from './booking.model'
 
 export const createBookingDB = async (data: iBooking): Promise<iBooking> => {
   // expertise, topic, user, package, paid, transactionId

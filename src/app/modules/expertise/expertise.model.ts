@@ -2,7 +2,7 @@ import httpStatus from 'http-status'
 import { Schema, model } from 'mongoose'
 import ApiError from '../../../error/ApiError'
 import { xHours, xLanguages, xStatus } from '../../../global/constant'
-import User from '../user/user.mode'
+import User from '../user/user.model'
 import { iExpertise, iExpertiseModel } from './expertise.interface'
 
 const expertiseSchema = new Schema<iExpertise, iExpertiseModel>(
