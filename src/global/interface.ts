@@ -26,6 +26,13 @@ export type iEducation = {
   cgpa: number
 }
 
+export type iPackages = {
+  title: string
+  description: string
+  hours: iHours
+  price: number
+}
+
 export type iGender = 'Male' | 'Female' | 'Others'
 
 export type iRole = 'super_admin' | 'admin' | 'mentor' | 'student'
@@ -35,3 +42,7 @@ export type iStatus = 'active' | 'inactive' | 'pending' | 'disabled'
 export type iCountryCode = '+880' | '+91' | '+92'
 
 export type iLanguages = 'English' | 'Bengali' | 'Hindi' | 'Urdu' | 'Arabic'
+
+export type iHours = 1 | 2 | 3
+
+export type iBookingStatus = 'completed' | 'pending' | 'canceled'

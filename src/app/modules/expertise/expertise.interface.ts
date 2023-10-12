@@ -1,5 +1,5 @@
 import { Model } from 'mongoose'
-import { iId, iLanguages } from '../../../global/interface'
+import { iId, iLanguages, iPackages, iStatus } from '../../../global/interface'
 
 export type iExpertise = {
   title: string
@@ -7,8 +7,9 @@ export type iExpertise = {
   category: iId
   mentor: iId
   topics: iId[]
-  hourly_rates: number[]
+  packages: iPackages[]
   languages: iLanguages[]
+  status: iStatus
 }
 
 export type iExpertiseModel = Model<iExpertise>
