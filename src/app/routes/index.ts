@@ -3,6 +3,7 @@ import authRoute from '../modules/auth/auth.route'
 import bookingRoute from '../modules/booking/booking.route'
 import categoryRoute from '../modules/category/category.route'
 import expertiseRoute from '../modules/expertise/expertise.route'
+import reviewRoute from '../modules/review/review.route'
 import topicRoute from '../modules/topic/topic.route'
 import userRoute from '../modules/user/user.route'
 
@@ -14,5 +15,6 @@ AppRouter.use('/api/v1/categories', categoryRoute)
 AppRouter.use('/api/v1/topics', topicRoute)
 AppRouter.use('/api/v1/expertises', expertiseRoute)
 AppRouter.use('/api/v1/bookings', bookingRoute)
+AppRouter.use('/api/v1/reviews', reviewRoute)
 
 export default AppRouter
