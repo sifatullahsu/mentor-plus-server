@@ -1,5 +1,6 @@
 import express from 'express'
 import authRoute from '../modules/auth/auth.route'
+import blogRoute from '../modules/blog/blog.route'
 import bookingRoute from '../modules/booking/booking.route'
 import categoryRoute from '../modules/category/category.route'
 import expertiseRoute from '../modules/expertise/expertise.route'
@@ -20,5 +21,6 @@ AppRouter.use('/api/v1/bookings', bookingRoute)
 AppRouter.use('/api/v1/reviews', reviewRoute)
 AppRouter.use('/api/v1/feedbacks', feedbackRoute)
 AppRouter.use('/api/v1/faqs', faqRoute)
+AppRouter.use('/api/v1/blogs', blogRoute)
 
 export default AppRouter

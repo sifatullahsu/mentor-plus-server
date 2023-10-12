@@ -46,3 +46,5 @@ export type iLanguages = 'English' | 'Bengali' | 'Hindi' | 'Urdu' | 'Arabic'
 export type iHours = 1 | 2 | 3
 
 export type iBookingStatus = 'completed' | 'pending' | 'canceled'
+
+export type iContentStatus = 'published' | 'draft' | 'pending' | 'unpublished'
