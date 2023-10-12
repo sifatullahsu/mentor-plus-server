@@ -1,5 +1,5 @@
 import { Types } from 'mongoose'
-import { iEmail, iGender, iName, iNumber, iRole, iUserStatus } from '../user/user.interface'
+import { iEmail, iGender, iName, iNumber, iRole, iStatus } from '../../../global/interface'
 
 export type iAuth = {
   _id: Types.ObjectId
@@ -8,7 +8,7 @@ export type iAuth = {
   number: iNumber
   gender: iGender
   role: iRole
-  status: iUserStatus
+  status: iStatus
   access_token: string
   refresh_token: string
 }

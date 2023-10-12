@@ -2,9 +2,8 @@ import bcrypt from 'bcrypt'
 import { Schema, model } from 'mongoose'
 import config from '../../../config'
 
-import { xCountryCode } from '../../../global/constant'
+import { xCountryCode, xGender, xRole, xStatus } from '../../../global/constant'
 import slugMaker from '../../../helper/slugMaker'
-import { xGender, xRole, xUserStatus } from './user.constant'
 import { iUser, iUserModel } from './user.interface'
 
 const userSchema = new Schema<iUser, iUserModel>(
@@ -26,7 +25,7 @@ const userSchema = new Schema<iUser, iUserModel>(
     gender: { type: String, required: true, enum: xGender },
     password: { type: String, required: true, select: 0 },
     role: { type: String, required: true, enum: xRole, default: 'student' },
-    status: { type: String, required: true, enum: xUserStatus, default: 'active' },
+    status: { type: String, required: true, enum: xStatus, default: 'active' },
     about: { type: String, trim: true, default: '' },
     education: [
       {

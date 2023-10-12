@@ -1,33 +1,5 @@
 import { Model } from 'mongoose'
-import { iCountryCode } from '../../../global/interface'
-
-export type iName = {
-  firstName: string
-  lastName: string
-}
-
-export type iEmail = {
-  address: string
-  is_verified: boolean
-}
-
-export type iNumber = {
-  cc: iCountryCode
-  digits: string
-  is_verified: boolean
-}
-
-export type iGender = 'Male' | 'Female' | 'Others'
-
-export type iRole = 'super_admin' | 'admin' | 'mentor' | 'student'
-
-export type iUserStatus = 'active' | 'inactive' | 'pending' | 'disabled'
-
-export type iEducation = {
-  institute: string
-  passing_year: number
-  cgpa: number
-}
+import { iEducation, iEmail, iGender, iName, iNumber, iRole, iStatus } from '../../../global/interface'
 
 export type iUser = {
   username: string
@@ -37,7 +9,7 @@ export type iUser = {
   gender: iGender
   password: string
   role: iRole
-  status: iUserStatus
+  status: iStatus
   about: string
   education: iEducation[]
 }
