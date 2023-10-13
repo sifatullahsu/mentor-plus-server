@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { xGender, xStatus } from '../../../global/constant'
+import { xGender, xRole, xStatus } from '../../../global/constant'
 
 export const updateUserZodSchema = z.object({
   body: z.object({
@@ -27,6 +27,24 @@ export const updateUserZodSchema = z.object({
     gender: z.enum(xGender).optional(),
     password: z.string().optional(),
     // @ts-ignore
-    status: z.enum(xStatus).optional()
+    role: z.enum(xRole).optional(),
+    // @ts-ignore
+    status: z.enum(xStatus).optional(),
+    about: z.string().optional(),
+    education: z
+      .array(
+        z.object({
+          institute: z.string({
+            required_error: 'institute is required'
+          }),
+          passing_year: z.number({
+            required_error: 'passing_year is required'
+          }),
+          cgpa: z.number({
+            required_error: 'cgpa is required'
+          })
+        })
+      )
+      .optional()
   })
 })
