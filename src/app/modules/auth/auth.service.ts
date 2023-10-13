@@ -46,7 +46,7 @@ export const loginUserDB = async (data: iLoginReqData): Promise<iAuth | null> =>
   const { password: removePassword, ...userinfo } = result.toObject()
 
   // generate tokens
-  const tokenData = { _id: userinfo._id, username: userinfo.username }
+  const tokenData = { _id: userinfo._id, username: userinfo.username, role: userinfo.role }
   const accessToken = createToken(tokenData, config.jwt.secret!, config.jwt.expiresIn!)
   const refreshToken = createToken(tokenData, config.jwt.refreshSecret!, config.jwt.refreshExpiresIn!)
 
