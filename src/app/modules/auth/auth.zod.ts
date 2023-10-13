@@ -15,9 +15,11 @@ export const registerZodSchema = z.object({
       })
     }),
     email: z.object({
-      address: z.string({
-        required_error: 'address is required.'
-      }),
+      address: z
+        .string({
+          required_error: 'address is required.'
+        })
+        .email(),
       is_verified: z.boolean().optional()
     }),
     number: z.object({

@@ -12,7 +12,7 @@ export const updateUserZodSchema = z.object({
       .optional(),
     email: z
       .object({
-        address: z.string().optional(),
+        address: z.string().email().optional(),
         is_verified: z.boolean().optional()
       })
       .optional(),
