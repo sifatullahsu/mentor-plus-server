@@ -1,5 +1,7 @@
 import httpStatus from 'http-status'
 import ApiError from '../../../error/ApiError'
+import { iMeta, iReturnWithMeta } from '../../../global/interface'
+import { iQueryBuilderReturn } from '../../../helper/queryBuilder'
 import transformObject from '../../../helper/transformObject'
 import User from '../user/user.model'
 import { iBlog } from './blog.interface'
@@ -14,30 +16,24 @@ export const createBlogDB = async (data: iBlog): Promise<iBlog> => {
   return result
 }
 
-export const getBlogsDB = async (): Promise<iBlog[] | null> => {
-  const result = await Blog.find({})
+export const getBlogsDB = async (data: iQueryBuilderReturn): Promise<iReturnWithMeta<iBlog[]>> => {
+  const { query, pagination } = data
+  const { page, order, size, skip, sort } = pagination
 
-  // const query = Blog.find({})
+  const result = await Blog.find(query)
+    .skip(skip)
+    .limit(size)
+    .sort({ [sort]: order })
 
-  // if (['a' === 'b']) {
-  //   query.populate('category')
-  // }
+  const count = await Blog.count(query)
 
-  // const result = await query.exec()
+  const meta: iMeta = {
+    page,
+    size,
+    count
+  }
 
-  // const { query, skip, limit, sort, populate } = {}
-  // const {
-  //   category: {}
-  // } = populate
-
-  // .skip(2)
-  // .limit(2)
-  // .sort({ createdAt: 'asc' })
-  // .populate('category', {})
-  //   .populate('topics', {})
-  //   .populate('user', {})
-
-  return result
+  return { meta, result }
 }
 
 export const getBlogDB = async (id: string): Promise<iBlog | null> => {
