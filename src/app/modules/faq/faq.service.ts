@@ -1,3 +1,5 @@
+import { iMeta, iReturnWithMeta } from '../../../global/interface'
+import { iQueryBuilderReturn } from '../../../helper/queryBuilder'
 import transformObject from '../../../helper/transformObject'
 import { iFaq } from './faq.interface'
 import Faq from './faq.model'
@@ -8,10 +10,24 @@ export const createFaqDB = async (data: iFaq): Promise<iFaq> => {
   return result
 }
 
-export const getFaqsDB = async (): Promise<iFaq[] | null> => {
-  const result = await Faq.find({})
+export const getFaqsDB = async (data: iQueryBuilderReturn): Promise<iReturnWithMeta<iFaq[]>> => {
+  const { query, pagination } = data
+  const { page, order, size, skip, sort } = pagination
 
-  return result
+  const result = await Faq.find(query)
+    .skip(skip)
+    .limit(size)
+    .sort({ [sort]: order })
+
+  const count = await Faq.count(query)
+
+  const meta: iMeta = {
+    page,
+    size,
+    count
+  }
+
+  return { meta, result }
 }
 
 export const getFaqDB = async (id: string): Promise<iFaq | null> => {

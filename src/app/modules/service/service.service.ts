@@ -1,4 +1,6 @@
 import { isValidObjectId } from 'mongoose'
+import { iMeta, iReturnWithMeta } from '../../../global/interface'
+import { iQueryBuilderReturn } from '../../../helper/queryBuilder'
 import transformObject from '../../../helper/transformObject'
 import { iService } from './service.interface'
 import Service from './service.model'
@@ -9,10 +11,27 @@ export const createServiceDB = async (data: iService): Promise<iService> => {
   return result
 }
 
-export const getServicesDB = async (): Promise<iService[] | null> => {
-  const result = await Service.find({}).populate('category').populate('mentor').populate('topics')
+export const getServicesDB = async (data: iQueryBuilderReturn): Promise<iReturnWithMeta<iService[]>> => {
+  const { query, pagination } = data
+  const { page, order, size, skip, sort } = pagination
 
-  return result
+  const result = await Service.find(query)
+    .populate('category')
+    .populate('mentor')
+    .populate('topics')
+    .skip(skip)
+    .limit(size)
+    .sort({ [sort]: order })
+
+  const count = await Service.count(query)
+
+  const meta: iMeta = {
+    page,
+    size,
+    count
+  }
+
+  return { meta, result }
 }
 
 export const getServiceDB = async (id: string): Promise<iService | null> => {

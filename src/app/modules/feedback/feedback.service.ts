@@ -1,5 +1,7 @@
 import httpStatus from 'http-status'
 import ApiError from '../../../error/ApiError'
+import { iMeta, iReturnWithMeta } from '../../../global/interface'
+import { iQueryBuilderReturn } from '../../../helper/queryBuilder'
 import transformObject from '../../../helper/transformObject'
 import User from '../user/user.model'
 import { iFeedback } from './feedback.interface'
@@ -14,10 +16,24 @@ export const createFeedbackDB = async (data: iFeedback): Promise<iFeedback> => {
   return result
 }
 
-export const getFeedbacksDB = async (): Promise<iFeedback[] | null> => {
-  const result = await Feedback.find({})
+export const getFeedbacksDB = async (data: iQueryBuilderReturn): Promise<iReturnWithMeta<iFeedback[]>> => {
+  const { query, pagination } = data
+  const { page, order, size, skip, sort } = pagination
 
-  return result
+  const result = await Feedback.find(query)
+    .skip(skip)
+    .limit(size)
+    .sort({ [sort]: order })
+
+  const count = await Feedback.count(query)
+
+  const meta: iMeta = {
+    page,
+    size,
+    count
+  }
+
+  return { meta, result }
 }
 
 export const getFeedbackDB = async (id: string): Promise<iFeedback | null> => {

@@ -1,7 +1,9 @@
 import { Request, Response } from 'express'
 import httpStatus from 'http-status'
+import queryBuilder from '../../../helper/queryBuilder'
 import apiResponse from '../../../shared/apiResponse'
 import catchAsync from '../../../shared/catchAsync'
+import { serviceQueryFields } from './service.constaint'
 import { iService } from './service.interface'
 import {
   createServiceDB,
@@ -23,13 +25,15 @@ export const createService = catchAsync(async (req: Request, res: Response) => {
 })
 
 export const getServices = catchAsync(async (req: Request, res: Response) => {
-  const result = await getServicesDB()
+  const query = queryBuilder(req.query, serviceQueryFields)
+  const { result, meta } = await getServicesDB(query)
 
   apiResponse<iService[]>(res, {
     success: true,
     status: httpStatus.OK,
     message: 'Services fetched successfull.',
-    data: result
+    data: result,
+    meta
   })
 })
 

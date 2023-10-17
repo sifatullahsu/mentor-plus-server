@@ -1,3 +1,5 @@
+import { iMeta, iReturnWithMeta } from '../../../global/interface'
+import { iQueryBuilderReturn } from '../../../helper/queryBuilder'
 import transformObject from '../../../helper/transformObject'
 import { iTopic } from './topic.interface'
 import Topic from './topic.model'
@@ -8,10 +10,24 @@ export const createTopicDB = async (data: iTopic): Promise<iTopic> => {
   return result
 }
 
-export const getTopicsDB = async (): Promise<iTopic[] | null> => {
-  const result = await Topic.find({})
+export const getTopicsDB = async (data: iQueryBuilderReturn): Promise<iReturnWithMeta<iTopic[]>> => {
+  const { query, pagination } = data
+  const { page, order, size, skip, sort } = pagination
 
-  return result
+  const result = await Topic.find(query)
+    .skip(skip)
+    .limit(size)
+    .sort({ [sort]: order })
+
+  const count = await Topic.count(query)
+
+  const meta: iMeta = {
+    page,
+    size,
+    count
+  }
+
+  return { meta, result }
 }
 
 export const getTopicDB = async (id: string): Promise<iTopic | null> => {

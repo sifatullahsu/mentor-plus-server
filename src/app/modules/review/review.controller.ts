@@ -1,7 +1,9 @@
 import { Request, Response } from 'express'
 import httpStatus from 'http-status'
+import queryBuilder from '../../../helper/queryBuilder'
 import apiResponse from '../../../shared/apiResponse'
 import catchAsync from '../../../shared/catchAsync'
+import { reviewQueryFields } from './review.constaint'
 import { iReview } from './review.interface'
 import { createReviewDB, deleteReviewDB, getReviewDB, getReviewsDB, updateReviewDB } from './review.service'
 
@@ -17,13 +19,15 @@ export const createReview = catchAsync(async (req: Request, res: Response) => {
 })
 
 export const getReviews = catchAsync(async (req: Request, res: Response) => {
-  const result = await getReviewsDB()
+  const query = queryBuilder(req.query, reviewQueryFields)
+  const { result, meta } = await getReviewsDB(query)
 
   apiResponse<iReview[]>(res, {
     success: true,
     status: httpStatus.OK,
     message: 'Reviews fetched successfull.',
-    data: result
+    data: result,
+    meta
   })
 })
 

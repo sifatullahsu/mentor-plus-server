@@ -1,7 +1,9 @@
 import { Request, Response } from 'express'
 import httpStatus from 'http-status'
+import queryBuilder from '../../../helper/queryBuilder'
 import apiResponse from '../../../shared/apiResponse'
 import catchAsync from '../../../shared/catchAsync'
+import { faqQueryFields } from './faq.constant'
 import { iFaq } from './faq.interface'
 import { createFaqDB, deleteFaqDB, getFaqDB, getFaqsDB, updateFaqDB } from './faq.service'
 
@@ -17,13 +19,15 @@ export const createFaq = catchAsync(async (req: Request, res: Response) => {
 })
 
 export const getFaqs = catchAsync(async (req: Request, res: Response) => {
-  const result = await getFaqsDB()
+  const query = queryBuilder(req.query, faqQueryFields)
+  const { result, meta } = await getFaqsDB(query)
 
   apiResponse<iFaq[]>(res, {
     success: true,
     status: httpStatus.OK,
     message: 'Faqs fetched successfull.',
-    data: result
+    data: result,
+    meta
   })
 })
 

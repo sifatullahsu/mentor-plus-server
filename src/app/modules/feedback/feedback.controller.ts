@@ -1,7 +1,9 @@
 import { Request, Response } from 'express'
 import httpStatus from 'http-status'
+import queryBuilder from '../../../helper/queryBuilder'
 import apiResponse from '../../../shared/apiResponse'
 import catchAsync from '../../../shared/catchAsync'
+import { feedbackQueryFields } from './feedback.constant'
 import { iFeedback } from './feedback.interface'
 import {
   createFeedbackDB,
@@ -23,13 +25,15 @@ export const createFeedback = catchAsync(async (req: Request, res: Response) => 
 })
 
 export const getFeedbacks = catchAsync(async (req: Request, res: Response) => {
-  const result = await getFeedbacksDB()
+  const query = queryBuilder(req.query, feedbackQueryFields)
+  const { result, meta } = await getFeedbacksDB(query)
 
   apiResponse<iFeedback[]>(res, {
     success: true,
     status: httpStatus.OK,
     message: 'Feedbacks fetched successfull.',
-    data: result
+    data: result,
+    meta
   })
 })
 
