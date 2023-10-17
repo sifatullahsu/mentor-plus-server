@@ -1,3 +1,5 @@
+import { iMeta, iReturnWithMeta } from '../../../global/interface'
+import { iQueryBuilderReturn } from '../../../helper/queryBuilder'
 import transformObject from '../../../helper/transformObject'
 import { iCategory } from './category.interface'
 import Category from './category.model'
@@ -8,10 +10,24 @@ export const createCategoryDB = async (data: iCategory): Promise<iCategory> => {
   return result
 }
 
-export const getCategoriesDB = async (): Promise<iCategory[] | null> => {
-  const result = await Category.find({})
+export const getCategoriesDB = async (data: iQueryBuilderReturn): Promise<iReturnWithMeta<iCategory[]>> => {
+  const { query, pagination } = data
+  const { page, order, size, skip, sort } = pagination
 
-  return result
+  const result = await Category.find(query)
+    .skip(skip)
+    .limit(size)
+    .sort({ [sort]: order })
+
+  const count = await Category.count(query)
+
+  const meta: iMeta = {
+    page,
+    size,
+    count
+  }
+
+  return { meta, result }
 }
 
 export const getCategoryDB = async (id: string): Promise<iCategory | null> => {
