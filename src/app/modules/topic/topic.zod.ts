@@ -5,9 +5,7 @@ export const createTopicZodSchema = z.object({
     title: z.string({
       required_error: 'title is required.'
     }),
-    description: z.string({
-      required_error: 'description is required.'
-    }),
+    slug: z.string().optional(),
     category: z.string({
       required_error: 'category is required.'
     })
@@ -17,7 +15,7 @@ export const createTopicZodSchema = z.object({
 export const updateTopicZodSchema = z.object({
   body: z.object({
     title: z.string().optional(),
-    description: z.string().optional(),
+    slug: z.string().optional(),
     category: z.string().optional()
   })
 })

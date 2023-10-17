@@ -4,6 +4,17 @@ export type iId = Types.ObjectId
 
 export type iMongooseDate = Date
 
+export type iMeta = {
+  page: number
+  size: number
+  count: number
+}
+
+export type iReturnWithMeta<T> = {
+  meta: iMeta
+  result: T
+}
+
 export type iName = {
   firstName: string
   lastName: string

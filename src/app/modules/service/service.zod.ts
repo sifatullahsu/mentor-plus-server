@@ -1,7 +1,7 @@
 import { z } from 'zod'
 import { xStatus } from '../../../global/constant'
 
-export const createExpertiseZodSchema = z.object({
+export const createServiceZodSchema = z.object({
   body: z.object({
     title: z.string({
       required_error: 'title is required.'
@@ -38,7 +38,7 @@ export const createExpertiseZodSchema = z.object({
   })
 })
 
-export const updateExpertiseZodSchema = z.object({
+export const updateServiceZodSchema = z.object({
   body: z.object({
     title: z.string().optional(),
     description: z.string().optional(),

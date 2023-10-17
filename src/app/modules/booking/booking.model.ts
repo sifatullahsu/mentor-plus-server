@@ -1,12 +1,12 @@
 import { Schema, model } from 'mongoose'
 import { xBookingStatus, xHours } from '../../../global/constant'
-import { categoryIdentity, expertiseIdentity, topicIdentity, userIdentity } from '../../identity/model'
+import { categoryIdentity, serviceIdentity, topicIdentity, userIdentity } from '../../identity/model'
 import { iBooking, iBookingModel } from './booking.interface'
 
 const bookingSchema = new Schema<iBooking, iBookingModel>(
   {
-    expertise: { type: Schema.Types.ObjectId, ref: 'Expertise', required: true, immutable: true },
-    expertiseDetails: { type: expertiseIdentity, required: true },
+    service: { type: Schema.Types.ObjectId, ref: 'Service', required: true, immutable: true },
+    serviceDetails: { type: serviceIdentity, required: true },
 
     topic: { type: Schema.Types.ObjectId, ref: 'Topic', required: true, immutable: true },
     topicDetails: { type: topicIdentity, required: true },
@@ -20,14 +20,10 @@ const bookingSchema = new Schema<iBooking, iBookingModel>(
     mentor: { type: Schema.Types.ObjectId, ref: 'User', required: true, immutable: true },
     mentorDetails: { type: userIdentity, required: true },
 
-    package: {
-      title: { type: String, required: true, trim: true },
-      description: { type: String, required: true, trim: true },
-      hours: { type: Number, required: true, enum: xHours },
-      price: { type: Number, required: true }
-    },
+    price: { type: Number, required: true },
+    hours: { type: Number, required: true, enum: xHours },
+    time: { type: String, required: true },
 
-    paid: { type: Number, required: true },
     transactionId: { type: String, required: true, trim: true },
     status: { type: String, required: true, trim: true, enum: xBookingStatus, default: 'completed' }
   },

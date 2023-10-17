@@ -7,7 +7,7 @@ export type iPagination = {
   order?: iOrder
 }
 
-type iPaginationReturn = {
+export type iPaginationReturn = {
   page: number
   size: number
   skip: number

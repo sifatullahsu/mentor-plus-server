@@ -23,6 +23,7 @@ const userSchema = new Schema<iUser, iUserModel>(
       is_verified: { type: Boolean, required: true, default: false }
     },
     gender: { type: String, required: true, enum: xGender },
+    image: { type: String, trim: true, default: '' },
     password: { type: String, required: true, select: 0 },
     role: { type: String, required: true, enum: xRole, default: 'student' },
     status: { type: String, required: true, enum: xStatus, default: 'active' },

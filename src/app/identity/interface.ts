@@ -16,7 +16,7 @@ export type iTopicIdentity = {
   slug: string
 }
 
-export type iExpertiseIdentity = {
+export type iServiceIdentity = {
   title: string
   category: iId
   mentor: iId

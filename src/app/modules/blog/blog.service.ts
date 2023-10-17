@@ -17,6 +17,26 @@ export const createBlogDB = async (data: iBlog): Promise<iBlog> => {
 export const getBlogsDB = async (): Promise<iBlog[] | null> => {
   const result = await Blog.find({})
 
+  // const query = Blog.find({})
+
+  // if (['a' === 'b']) {
+  //   query.populate('category')
+  // }
+
+  // const result = await query.exec()
+
+  // const { query, skip, limit, sort, populate } = {}
+  // const {
+  //   category: {}
+  // } = populate
+
+  // .skip(2)
+  // .limit(2)
+  // .sort({ createdAt: 'asc' })
+  // .populate('category', {})
+  //   .populate('topics', {})
+  //   .populate('user', {})
+
   return result
 }
 

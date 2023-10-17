@@ -7,6 +7,7 @@ export type iUser = {
   email: iEmail
   number: iNumber
   gender: iGender
+  image: string
   password: string
   role: iRole
   status: iStatus

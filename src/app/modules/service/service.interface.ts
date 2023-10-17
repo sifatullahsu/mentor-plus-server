@@ -1,9 +1,11 @@
 import { Model } from 'mongoose'
 import { iId, iLanguages, iPackages, iStatus } from '../../../global/interface'
 
-export type iExpertise = {
+export type iService = {
+  uid: number
   title: string
   description: string
+  image: string
   category: iId
   mentor: iId
   topics: iId[]
@@ -12,4 +14,6 @@ export type iExpertise = {
   status: iStatus
 }
 
-export type iExpertiseModel = Model<iExpertise>
+export type iServiceModel = {
+  uidGenerator(): Promise<number>
+} & Model<iService>

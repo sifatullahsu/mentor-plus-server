@@ -1,6 +1,6 @@
 import { Schema } from 'mongoose'
 import { xRole } from '../../global/constant'
-import { iCategoryIdentity, iExpertiseIdentity, iTopicIdentity, iUserIdentity } from './interface'
+import { iCategoryIdentity, iServiceIdentity, iTopicIdentity, iUserIdentity } from './interface'
 
 export const userIdentity = new Schema<iUserIdentity>(
   {
@@ -30,7 +30,7 @@ export const topicIdentity = new Schema<iTopicIdentity>(
   { _id: false }
 )
 
-export const expertiseIdentity = new Schema<iExpertiseIdentity>(
+export const serviceIdentity = new Schema<iServiceIdentity>(
   {
     title: { type: String, required: true },
     category: { type: Schema.Types.ObjectId, ref: 'Category', required: true },

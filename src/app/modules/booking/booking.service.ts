@@ -1,45 +1,47 @@
 import httpStatus from 'http-status'
 import ApiError from '../../../error/ApiError'
+import { iMeta, iReturnWithMeta } from '../../../global/interface'
+import { iQueryBuilderReturn } from '../../../helper/queryBuilder'
 import transformObject from '../../../helper/transformObject'
 import {
   getCategoryIdentity,
-  getExpertiseIdentity,
+  getServiceIdentity,
   getTopicIdentity,
   getUserIdentity
 } from '../../identity/utils'
-import Expertise from '../expertise/expertise.model'
+import Service from '../service/service.model'
 import { iBooking } from './booking.interface'
 import Booking from './booking.model'
 
 export const createBookingDB = async (data: iBooking): Promise<iBooking> => {
   // expertise, topic, user, package, paid, transactionId
 
-  const expertise = await getExpertiseIdentity(data.expertise)
-  if (!expertise) throw new ApiError(httpStatus.BAD_REQUEST, 'Expertise id not valid')
+  const service = await getServiceIdentity(data.service)
+  if (!service) throw new ApiError(httpStatus.BAD_REQUEST, 'Service id not valid')
 
   const topic = await getTopicIdentity(data.topic)
   if (!topic) throw new ApiError(httpStatus.BAD_REQUEST, 'Topic id not valid')
 
-  const validateTopicWithMentor = await Expertise.count({
-    $and: [{ mentor: expertise.mentor }, { topics: { $in: data.topic } }]
+  const validateTopicWithMentor = await Service.count({
+    $and: [{ mentor: service.mentor }, { topics: { $in: data.topic } }]
   })
   if (!validateTopicWithMentor) throw new ApiError(httpStatus.BAD_REQUEST, 'Topic id not valid for mentor')
 
   const user = await getUserIdentity(data.user)
   if (!user || user.role !== 'student') throw new ApiError(httpStatus.BAD_REQUEST, 'User id not valid')
 
-  const category = await getCategoryIdentity(expertise.category)
+  const category = await getCategoryIdentity(service.category)
   if (!category) throw new ApiError(httpStatus.BAD_REQUEST, 'Category id not valid')
 
-  const mentor = await getUserIdentity(expertise.mentor)
+  const mentor = await getUserIdentity(service.mentor)
   if (!mentor || mentor.role !== 'mentor') throw new ApiError(httpStatus.BAD_REQUEST, 'Mentor id not valid')
 
-  data.expertiseDetails = expertise
+  data.serviceDetails = service
   data.topicDetails = topic
   data.userDetails = user
-  data.category = expertise.category
+  data.category = service.category
   data.categoryDetails = category
-  data.mentor = expertise.mentor
+  data.mentor = service.mentor
   data.mentorDetails = mentor
 
   const result = await Booking.create(data)
@@ -47,10 +49,24 @@ export const createBookingDB = async (data: iBooking): Promise<iBooking> => {
   return result
 }
 
-export const getBookingsDB = async (): Promise<iBooking[] | null> => {
-  const result = await Booking.find({})
+export const getBookingsDB = async (data: iQueryBuilderReturn): Promise<iReturnWithMeta<iBooking[]>> => {
+  const { query, pagination } = data
+  const { page, order, size, skip, sort } = pagination
 
-  return result
+  const result = await Booking.find(query)
+    .skip(skip)
+    .limit(size)
+    .sort({ [sort]: order })
+
+  const count = await Booking.count(query)
+
+  const meta: iMeta = {
+    page,
+    size,
+    count
+  }
+
+  return { meta, result }
 }
 
 export const getBookingDB = async (id: string): Promise<iBooking | null> => {

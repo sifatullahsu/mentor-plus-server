@@ -3,8 +3,8 @@ import { xBookingStatus } from '../../../global/constant'
 
 export const createBookingZodSchema = z.object({
   body: z.object({
-    expertise: z.string({
-      required_error: 'expertise is required.'
+    service: z.string({
+      required_error: 'service is required.'
     }),
     topic: z.string({
       required_error: 'topic is required.'
@@ -12,22 +12,14 @@ export const createBookingZodSchema = z.object({
     user: z.string({
       required_error: 'user is required.'
     }),
-    package: z.object({
-      title: z.string({
-        required_error: 'title is required.'
-      }),
-      description: z.string({
-        required_error: 'description is required.'
-      }),
-      hours: z.number({
-        required_error: 'hours is required.'
-      }),
-      price: z.number({
-        required_error: 'price is required.'
-      })
+    price: z.number({
+      required_error: 'price is required.'
     }),
-    paid: z.string({
-      required_error: 'paid is required.'
+    hours: z.number({
+      required_error: 'hours is required.'
+    }),
+    time: z.string({
+      required_error: 'time is required.'
     }),
     transactionId: z.string({
       required_error: 'transactionId is required.'
@@ -39,6 +31,7 @@ export const createBookingZodSchema = z.object({
 
 export const updateBookingZodSchema = z.object({
   body: z.object({
+    time: z.string().optional(),
     // @ts-ignore
     status: z.enum(xBookingStatus).optional()
   })

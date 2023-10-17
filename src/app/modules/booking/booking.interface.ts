@@ -1,15 +1,10 @@
 import { Model } from 'mongoose'
-import { iBookingStatus, iId, iPackages } from '../../../global/interface'
-import {
-  iCategoryIdentity,
-  iExpertiseIdentity,
-  iTopicIdentity,
-  iUserIdentity
-} from '../../identity/interface'
+import { iBookingStatus, iId } from '../../../global/interface'
+import { iCategoryIdentity, iServiceIdentity, iTopicIdentity, iUserIdentity } from '../../identity/interface'
 
 export type iBooking = {
-  expertise: iId
-  expertiseDetails: iExpertiseIdentity
+  service: iId
+  serviceDetails: iServiceIdentity
 
   topic: iId
   topicDetails: iTopicIdentity
@@ -23,9 +18,10 @@ export type iBooking = {
   mentor: iId
   mentorDetails: iUserIdentity
 
-  package: iPackages
+  price: number
+  hours: number
+  time: string
 
-  paid: number
   transactionId: string
   status: iBookingStatus
 }

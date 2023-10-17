@@ -1,5 +1,6 @@
 import { Request, Response } from 'express'
 import httpStatus from 'http-status'
+import queryBuilder from '../../../helper/queryBuilder'
 import apiResponse from '../../../shared/apiResponse'
 import catchAsync from '../../../shared/catchAsync'
 import { iBooking } from './booking.interface'
@@ -23,13 +24,25 @@ export const createBooking = catchAsync(async (req: Request, res: Response) => {
 })
 
 export const getBookings = catchAsync(async (req: Request, res: Response) => {
-  const result = await getBookingsDB()
+  const queryFields: string[] = [
+    'service:$eq',
+    'user:$eq',
+    'mentor:$eq',
+    'status:$eq',
+    'price:$eq,$gt,$gte,$lt,$lte',
+    'hours:$eq,$gt,$gte,$lt,$lte'
+  ]
+
+  const query = queryBuilder(req.query, queryFields)
+
+  const { result, meta } = await getBookingsDB(query)
 
   apiResponse<iBooking[]>(res, {
     success: true,
     status: httpStatus.OK,
     message: 'Bookings fetched successfull.',
-    data: result
+    data: result,
+    meta
   })
 })
 

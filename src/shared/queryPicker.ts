@@ -1,5 +1,7 @@
-const queryPicker = <T extends Record<string, unknown>, k extends keyof T>(obj: T, keys: k[]): Partial<T> => {
-  const finalObj: Partial<T> = {}
+type iQueryPicker = <T extends Record<string, unknown>, K extends keyof T>(obj: T, keys: K[]) => Partial<T>
+
+const queryPicker: iQueryPicker = (obj, keys) => {
+  const finalObj: Partial<typeof obj> = {}
 
   for (const key of keys) {
     if (obj && Object.hasOwnProperty.call(obj, key)) {
