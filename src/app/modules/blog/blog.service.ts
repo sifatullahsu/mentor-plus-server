@@ -1,4 +1,5 @@
 import httpStatus from 'http-status'
+import { isValidObjectId } from 'mongoose'
 import ApiError from '../../../error/ApiError'
 import { iMeta, iReturnWithMeta } from '../../../global/interface'
 import { iQueryBuilderReturn } from '../../../helper/queryBuilder'
@@ -21,6 +22,9 @@ export const getBlogsDB = async (data: iQueryBuilderReturn): Promise<iReturnWith
   const { page, order, size, skip, sort } = pagination
 
   const result = await Blog.find(query)
+    .populate('category')
+    .populate('topics')
+    .populate('user')
     .skip(skip)
     .limit(size)
     .sort({ [sort]: order })
@@ -37,7 +41,8 @@ export const getBlogsDB = async (data: iQueryBuilderReturn): Promise<iReturnWith
 }
 
 export const getBlogDB = async (id: string): Promise<iBlog | null> => {
-  const result = await Blog.findById(id)
+  const query = isValidObjectId(id) ? { _id: id } : { slug: id }
+  const result = await Blog.findOne(query).populate('category').populate('topics').populate('user')
 
   return result
 }

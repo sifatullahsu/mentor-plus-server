@@ -1,5 +1,5 @@
 import { Model } from 'mongoose'
-import { iBookingStatus, iId } from '../../../global/interface'
+import { iBookingStatus, iId, iMongooseDate } from '../../../global/interface'
 import { iCategoryIdentity, iServiceIdentity, iTopicIdentity, iUserIdentity } from '../../identity/interface'
 
 export type iBooking = {
@@ -20,7 +20,7 @@ export type iBooking = {
 
   price: number
   hours: number
-  time: string
+  time: iMongooseDate
 
   transactionId: string
   status: iBookingStatus

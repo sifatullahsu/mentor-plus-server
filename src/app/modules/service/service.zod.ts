@@ -23,9 +23,6 @@ export const createServiceZodSchema = z.object({
           title: z.string({
             required_error: 'title is required.'
           }),
-          description: z.string({
-            required_error: 'description is required.'
-          }),
           hours: z.number({
             required_error: 'hours is required.'
           }),
@@ -53,9 +50,6 @@ export const updateServiceZodSchema = z.object({
         z.object({
           title: z.string({
             required_error: 'title is required.'
-          }),
-          description: z.string({
-            required_error: 'description is required.'
           }),
           hours: z.number({
             required_error: 'hours is required.'

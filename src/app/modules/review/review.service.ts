@@ -9,12 +9,12 @@ import Review from './review.model'
 
 export const createReviewDB = async (data: iReview): Promise<iReview> => {
   const isValid = await Booking.count({
-    $and: [{ _id: data.booking }, { expertise: data.expertise }, { user: data.user }]
+    $and: [{ _id: data.booking }, { service: data.service }, { user: data.user }]
   })
   if (!isValid) throw new ApiError(httpStatus.BAD_REQUEST, 'Ids are incorrect')
 
   const aleadyGivedReview = await Review.count({
-    $and: [{ booking: data.booking }, { expertise: data.expertise }, { user: data.user }]
+    $and: [{ booking: data.booking }, { service: data.service }, { user: data.user }]
   })
   if (aleadyGivedReview) throw new ApiError(httpStatus.BAD_REQUEST, 'You already gived review')
 

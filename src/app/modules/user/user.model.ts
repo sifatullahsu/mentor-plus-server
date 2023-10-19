@@ -62,6 +62,10 @@ userSchema.pre('save', async function (next) {
 userSchema.pre('findOneAndUpdate', async function () {
   const user = <Partial<iUser>>this.getUpdate()
 
+  if (user?.username) {
+    user.username = slugMaker(user.username)
+  }
+
   if (user?.password) {
     user.password = await User.hashGenerator(user.password)
   }

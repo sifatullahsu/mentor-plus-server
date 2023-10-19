@@ -28,7 +28,9 @@ export const createBookingDB = async (data: iBooking): Promise<iBooking> => {
   if (!validateTopicWithMentor) throw new ApiError(httpStatus.BAD_REQUEST, 'Topic id not valid for mentor')
 
   const user = await getUserIdentity(data.user)
-  if (!user || user.role !== 'student') throw new ApiError(httpStatus.BAD_REQUEST, 'User id not valid')
+  if (!user || (user.role !== 'student' && user.role !== 'mentor')) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'User not valid. Only student & mentor can booking.')
+  }
 
   const category = await getCategoryIdentity(service.category)
   if (!category) throw new ApiError(httpStatus.BAD_REQUEST, 'Category id not valid')
@@ -70,7 +72,7 @@ export const getBookingsDB = async (data: iQueryBuilderReturn): Promise<iReturnW
 }
 
 export const getBookingDB = async (id: string): Promise<iBooking | null> => {
-  const result = await Booking.findById(id)
+  const result = await Booking.findById(id).populate('service').populate('mentor').populate('user')
 
   return result
 }

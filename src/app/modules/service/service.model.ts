@@ -19,7 +19,6 @@ const serviceSchema = new Schema<iService, iServiceModel>(
     packages: [
       {
         title: { type: String, required: true, trim: true },
-        description: { type: String, required: true, trim: true },
         hours: { type: Number, required: true, enum: xHours },
         price: { type: Number, required: true }
       }

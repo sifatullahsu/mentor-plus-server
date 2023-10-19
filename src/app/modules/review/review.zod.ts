@@ -14,8 +14,8 @@ export const createReviewZodSchema = z.object({
     description: z.string({
       required_error: 'description is required.'
     }),
-    expertise: z.string({
-      required_error: 'expertise is required.'
+    service: z.string({
+      required_error: 'service is required.'
     }),
     user: z.string({
       required_error: 'user is required.'

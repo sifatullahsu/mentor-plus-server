@@ -1,6 +1,6 @@
 export const reviewQueryFields = [
   'rating:$eq,$ne,$gt,$gte,$lt,$lte',
-  'expertise:$eq',
+  'service:$eq',
   'user:$eq',
   'booking:$eq'
 ]

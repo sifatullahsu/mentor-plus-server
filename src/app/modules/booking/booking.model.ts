@@ -22,7 +22,7 @@ const bookingSchema = new Schema<iBooking, iBookingModel>(
 
     price: { type: Number, required: true },
     hours: { type: Number, required: true, enum: xHours },
-    time: { type: String, required: true },
+    time: { type: Date, required: true },
 
     transactionId: { type: String, required: true, trim: true },
     status: { type: String, required: true, trim: true, enum: xBookingStatus, default: 'completed' }

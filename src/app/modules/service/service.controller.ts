@@ -1,8 +1,10 @@
 import { Request, Response } from 'express'
 import httpStatus from 'http-status'
+import createPagination, { paginationQuery } from '../../../helper/createPagination'
 import queryBuilder from '../../../helper/queryBuilder'
 import apiResponse from '../../../shared/apiResponse'
 import catchAsync from '../../../shared/catchAsync'
+import queryPicker from '../../../shared/queryPicker'
 import { serviceQueryFields } from './service.constaint'
 import { iService } from './service.interface'
 import {
@@ -10,6 +12,7 @@ import {
   deleteServiceDB,
   getServiceDB,
   getServicesDB,
+  getServicesWithSearchDB,
   updateServiceDB
 } from './service.service'
 
@@ -27,6 +30,21 @@ export const createService = catchAsync(async (req: Request, res: Response) => {
 export const getServices = catchAsync(async (req: Request, res: Response) => {
   const query = queryBuilder(req.query, serviceQueryFields)
   const { result, meta } = await getServicesDB(query)
+
+  apiResponse<iService[]>(res, {
+    success: true,
+    status: httpStatus.OK,
+    message: 'Services fetched successfull.',
+    data: result,
+    meta
+  })
+})
+
+export const getServicesWithSearch = catchAsync(async (req: Request, res: Response) => {
+  const pagination = createPagination(queryPicker(req.query, paginationQuery))
+  const query = queryPicker(req.query, ['search', 'min', 'max', 'category'])
+
+  const { result, meta } = await getServicesWithSearchDB(pagination, query)
 
   apiResponse<iService[]>(res, {
     success: true,

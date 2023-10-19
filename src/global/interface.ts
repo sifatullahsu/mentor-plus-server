@@ -39,7 +39,6 @@ export type iEducation = {
 
 export type iPackages = {
   title: string
-  description: string
   hours: iHours
   price: number
 }

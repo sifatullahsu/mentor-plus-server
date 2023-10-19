@@ -15,6 +15,7 @@ export const getTopicsDB = async (data: iQueryBuilderReturn): Promise<iReturnWit
   const { page, order, size, skip, sort } = pagination
 
   const result = await Topic.find(query)
+    .populate('category')
     .skip(skip)
     .limit(size)
     .sort({ [sort]: order })
@@ -31,7 +32,7 @@ export const getTopicsDB = async (data: iQueryBuilderReturn): Promise<iReturnWit
 }
 
 export const getTopicDB = async (id: string): Promise<iTopic | null> => {
-  const result = await Topic.findById(id)
+  const result = await Topic.findById(id).populate('category')
 
   return result
 }

@@ -5,7 +5,7 @@ export type iReview = {
   rating: number
   title: string
   description: string
-  expertise: iId
+  service: iId
   user: iId
   booking: iId
 }
