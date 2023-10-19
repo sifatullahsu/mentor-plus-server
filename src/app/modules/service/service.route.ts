@@ -1,5 +1,6 @@
 import { Router } from 'express'
 import validateRequest from '../../middlewares/validateRequest'
+import { validateRole } from '../../middlewares/validateRole'
 import {
   createService,
   deleteService,
@@ -12,11 +13,16 @@ import { createServiceZodSchema, updateServiceZodSchema } from './service.zod'
 
 const serviceRoute = Router()
 
-serviceRoute.post('/', validateRequest(createServiceZodSchema), createService)
+serviceRoute.post('/', validateRole(['mentor']), validateRequest(createServiceZodSchema), createService)
 serviceRoute.get('/', getServices)
 serviceRoute.get('/search', getServicesWithSearch)
 serviceRoute.get('/:id', getService)
-serviceRoute.patch('/:id', validateRequest(updateServiceZodSchema), updateService)
-serviceRoute.delete('/:id', deleteService)
+serviceRoute.patch(
+  '/:id',
+  validateRole(['mentor', 'admin']),
+  validateRequest(updateServiceZodSchema),
+  updateService
+)
+serviceRoute.delete('/:id', validateRole(['mentor', 'admin']), deleteService)
 
 export default serviceRoute

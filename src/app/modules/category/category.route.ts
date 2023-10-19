@@ -1,5 +1,6 @@
 import { Router } from 'express'
 import validateRequest from '../../middlewares/validateRequest'
+import { validateRole } from '../../middlewares/validateRole'
 import {
   createCategory,
   deleteCategory,
@@ -11,10 +12,10 @@ import { createCategoryZodSchema, updateCategoryZodSchema } from './category.zod
 
 const categoryRoute = Router()
 
-categoryRoute.post('/', validateRequest(createCategoryZodSchema), createCategory)
+categoryRoute.post('/', validateRole(['admin']), validateRequest(createCategoryZodSchema), createCategory)
 categoryRoute.get('/', getCategories)
 categoryRoute.get('/:id', getCategory)
-categoryRoute.patch('/:id', validateRequest(updateCategoryZodSchema), updateCategory)
-categoryRoute.delete('/:id', deleteCategory)
+categoryRoute.patch('/:id', validateRole(['admin']), validateRequest(updateCategoryZodSchema), updateCategory)
+categoryRoute.delete('/:id', validateRole(['admin']), deleteCategory)
 
 export default categoryRoute
