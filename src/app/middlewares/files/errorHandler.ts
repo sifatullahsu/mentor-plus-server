@@ -1,10 +1,10 @@
 import { ErrorRequestHandler } from 'express'
 import mongoose from 'mongoose'
 import { ZodError } from 'zod'
-import ApiError from '../../error/ApiError'
-import handleCastError from '../../error/handleCastError'
-import handleValidationError from '../../error/handleValidationError'
-import handleZodError from '../../error/handleZodError'
+import ApiError from '../../../error/ApiError'
+import handleCastError from '../../../error/handleCastError'
+import handleValidationError from '../../../error/handleValidationError'
+import handleZodError from '../../../error/handleZodError'
 
 type iErrorMessages = {
   path: string | number

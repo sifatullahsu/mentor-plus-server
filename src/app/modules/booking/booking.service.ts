@@ -1,8 +1,8 @@
 import httpStatus from 'http-status'
+import { IQueryMaker } from 'mongoose-query-maker'
 import ApiError from '../../../error/ApiError'
 import { iMeta, iReturnWithMeta } from '../../../global/interface'
-import { iQueryBuilderReturn } from '../../../helper/queryBuilder'
-import transformObject from '../../../helper/transformObject'
+import transformObject from '../../../shared/files/transformObject'
 import {
   getCategoryIdentity,
   getServiceIdentity,
@@ -13,7 +13,7 @@ import Service from '../service/service.model'
 import { iBooking } from './booking.interface'
 import Booking from './booking.model'
 
-export const createBookingDB = async (data: iBooking): Promise<iBooking> => {
+const createData = async (data: iBooking): Promise<iBooking> => {
   // expertise, topic, user, package, paid, transactionId
 
   const service = await getServiceIdentity(data.service)
@@ -51,33 +51,36 @@ export const createBookingDB = async (data: iBooking): Promise<iBooking> => {
   return result
 }
 
-export const getBookingsDB = async (data: iQueryBuilderReturn): Promise<iReturnWithMeta<iBooking[]>> => {
-  const { query, pagination } = data
-  const { page, order, size, skip, sort } = pagination
+const getAllData = async (data: IQueryMaker): Promise<iReturnWithMeta<iBooking[]>> => {
+  const { query, pagination, selector } = data
+  const { page, limit, skip, sort } = pagination
+  const { select, populate } = selector
 
   const result = await Booking.find(query)
+    .select(select)
     .skip(skip)
-    .limit(size)
-    .sort({ [sort]: order })
+    .limit(limit)
+    .sort(sort)
+    .populate(populate)
 
   const count = await Booking.count(query)
 
   const meta: iMeta = {
     page,
-    size,
+    limit,
     count
   }
 
   return { meta, result }
 }
 
-export const getBookingDB = async (id: string): Promise<iBooking | null> => {
+const getData = async (id: string): Promise<iBooking | null> => {
   const result = await Booking.findById(id).populate('service').populate('mentor').populate('user')
 
   return result
 }
 
-export const updateBookingDB = async (id: string, data: Partial<iBooking>): Promise<iBooking | null> => {
+const updateData = async (id: string, data: Partial<iBooking>): Promise<iBooking | null> => {
   const transform = transformObject(data)
 
   const result = await Booking.findByIdAndUpdate(id, transform, {
@@ -88,8 +91,16 @@ export const updateBookingDB = async (id: string, data: Partial<iBooking>): Prom
   return result
 }
 
-export const deleteBookingDB = async (id: string): Promise<iBooking | null> => {
+const deleteData = async (id: string): Promise<iBooking | null> => {
   const result = await Booking.findByIdAndDelete(id)
 
   return result
+}
+
+export const BookingService = {
+  createData,
+  getAllData,
+  getData,
+  updateData,
+  deleteData
 }

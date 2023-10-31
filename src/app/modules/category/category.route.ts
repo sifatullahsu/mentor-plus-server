@@ -1,21 +1,14 @@
 import { Router } from 'express'
-import validateRequest from '../../middlewares/validateRequest'
-import { validateRole } from '../../middlewares/validateRole'
-import {
-  createCategory,
-  deleteCategory,
-  getCategories,
-  getCategory,
-  updateCategory
-} from './category.controller'
+import { validateRole, validateZod } from '../../middlewares'
+import { CategoryController as controller } from './category.controller'
 import { createCategoryZodSchema, updateCategoryZodSchema } from './category.zod'
 
-const categoryRoute = Router()
+const router = Router()
 
-categoryRoute.post('/', validateRole(['admin']), validateRequest(createCategoryZodSchema), createCategory)
-categoryRoute.get('/', getCategories)
-categoryRoute.get('/:id', getCategory)
-categoryRoute.patch('/:id', validateRole(['admin']), validateRequest(updateCategoryZodSchema), updateCategory)
-categoryRoute.delete('/:id', validateRole(['admin']), deleteCategory)
+router.post('/', validateRole(['admin']), validateZod(createCategoryZodSchema), controller.createData)
+router.get('/', controller.getAllData)
+router.get('/:id', controller.getData)
+router.patch('/:id', validateRole(['admin']), validateZod(updateCategoryZodSchema), controller.updateData)
+router.delete('/:id', validateRole(['admin']), controller.deleteData)
 
-export default categoryRoute
+export const CategoryRoute = router

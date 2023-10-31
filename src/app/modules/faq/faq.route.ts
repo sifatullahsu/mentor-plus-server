@@ -1,15 +1,14 @@
 import { Router } from 'express'
-import validateRequest from '../../middlewares/validateRequest'
-import { validateRole } from '../../middlewares/validateRole'
-import { createFaq, deleteFaq, getFaq, getFaqs, updateFaq } from './faq.controller'
+import { validateRole, validateZod } from '../../middlewares'
+import { FaqController as controller } from './faq.controller'
 import { createFaqZodSchema, updateFaqZodSchema } from './faq.zod'
 
-const faqRoute = Router()
+const router = Router()
 
-faqRoute.post('/', validateRole(['admin']), validateRequest(createFaqZodSchema), createFaq)
-faqRoute.get('/', getFaqs)
-faqRoute.get('/:id', getFaq)
-faqRoute.patch('/:id', validateRole(['admin']), validateRequest(updateFaqZodSchema), updateFaq)
-faqRoute.delete('/:id', validateRole(['admin']), deleteFaq)
+router.post('/', validateRole(['admin']), validateZod(createFaqZodSchema), controller.createData)
+router.get('/', controller.getAllData)
+router.get('/:id', controller.getData)
+router.patch('/:id', validateRole(['admin']), validateZod(updateFaqZodSchema), controller.updateData)
+router.delete('/:id', validateRole(['admin']), controller.deleteData)
 
-export default faqRoute
+export const FaqRoute = router

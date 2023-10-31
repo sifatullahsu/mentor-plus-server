@@ -1,20 +1,13 @@
 import { Request, Response } from 'express'
 import httpStatus from 'http-status'
-import queryBuilder from '../../../helper/queryBuilder'
-import apiResponse from '../../../shared/apiResponse'
-import catchAsync from '../../../shared/catchAsync'
-import { bookingQueryFields } from './booking.constant'
+import { queryMaker } from 'mongoose-query-maker'
+import { apiResponse, catchAsync } from '../../../shared'
+import { bookingQuery, bookingSelector } from './booking.constant'
 import { iBooking } from './booking.interface'
-import {
-  createBookingDB,
-  deleteBookingDB,
-  getBookingDB,
-  getBookingsDB,
-  updateBookingDB
-} from './booking.service'
+import { BookingService as service } from './booking.service'
 
-export const createBooking = catchAsync(async (req: Request, res: Response) => {
-  const result = await createBookingDB(req.body)
+const createData = catchAsync(async (req: Request, res: Response) => {
+  const result = await service.createData(req.body)
 
   apiResponse<iBooking>(res, {
     success: true,
@@ -24,9 +17,9 @@ export const createBooking = catchAsync(async (req: Request, res: Response) => {
   })
 })
 
-export const getBookings = catchAsync(async (req: Request, res: Response) => {
-  const query = queryBuilder(req.query, bookingQueryFields)
-  const { result, meta } = await getBookingsDB(query)
+const getAllData = catchAsync(async (req: Request, res: Response) => {
+  const query = queryMaker(req.query, req.user, bookingQuery, bookingSelector)
+  const { result, meta } = await service.getAllData(query)
 
   apiResponse<iBooking[]>(res, {
     success: true,
@@ -37,8 +30,8 @@ export const getBookings = catchAsync(async (req: Request, res: Response) => {
   })
 })
 
-export const getBooking = catchAsync(async (req: Request, res: Response) => {
-  const result = await getBookingDB(req.params.id)
+const getData = catchAsync(async (req: Request, res: Response) => {
+  const result = await service.getData(req.params.id)
 
   apiResponse<iBooking>(res, {
     success: true,
@@ -48,8 +41,8 @@ export const getBooking = catchAsync(async (req: Request, res: Response) => {
   })
 })
 
-export const updateBooking = catchAsync(async (req: Request, res: Response) => {
-  const result = await updateBookingDB(req.params.id, req.body)
+const updateData = catchAsync(async (req: Request, res: Response) => {
+  const result = await service.updateData(req.params.id, req.body)
 
   apiResponse<iBooking>(res, {
     success: true,
@@ -59,8 +52,8 @@ export const updateBooking = catchAsync(async (req: Request, res: Response) => {
   })
 })
 
-export const deleteBooking = catchAsync(async (req: Request, res: Response) => {
-  const result = await deleteBookingDB(req.params.id)
+const deleteData = catchAsync(async (req: Request, res: Response) => {
+  const result = await service.deleteData(req.params.id)
 
   apiResponse<iBooking>(res, {
     success: true,
@@ -69,3 +62,11 @@ export const deleteBooking = catchAsync(async (req: Request, res: Response) => {
     data: result
   })
 })
+
+export const BookingController = {
+  createData,
+  getAllData,
+  getData,
+  updateData,
+  deleteData
+}

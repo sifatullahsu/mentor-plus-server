@@ -1,20 +1,13 @@
 import { Request, Response } from 'express'
 import httpStatus from 'http-status'
-import queryBuilder from '../../../helper/queryBuilder'
-import apiResponse from '../../../shared/apiResponse'
-import catchAsync from '../../../shared/catchAsync'
-import { feedbackQueryFields } from './feedback.constant'
+import { queryMaker } from 'mongoose-query-maker'
+import { apiResponse, catchAsync } from '../../../shared'
+import { feedbackQuery, feedbackSelector } from './feedback.constant'
 import { iFeedback } from './feedback.interface'
-import {
-  createFeedbackDB,
-  deleteFeedbackDB,
-  getFeedbackDB,
-  getFeedbacksDB,
-  updateFeedbackDB
-} from './feedback.service'
+import { FeedbackService as service } from './feedback.service'
 
-export const createFeedback = catchAsync(async (req: Request, res: Response) => {
-  const result = await createFeedbackDB(req.body)
+const createData = catchAsync(async (req: Request, res: Response) => {
+  const result = await service.createData(req.body)
 
   apiResponse<iFeedback>(res, {
     success: true,
@@ -24,9 +17,9 @@ export const createFeedback = catchAsync(async (req: Request, res: Response) => 
   })
 })
 
-export const getFeedbacks = catchAsync(async (req: Request, res: Response) => {
-  const query = queryBuilder(req.query, feedbackQueryFields)
-  const { result, meta } = await getFeedbacksDB(query)
+const getAllData = catchAsync(async (req: Request, res: Response) => {
+  const query = queryMaker(req.query, req.user, feedbackQuery, feedbackSelector)
+  const { result, meta } = await service.getAllData(query)
 
   apiResponse<iFeedback[]>(res, {
     success: true,
@@ -37,8 +30,8 @@ export const getFeedbacks = catchAsync(async (req: Request, res: Response) => {
   })
 })
 
-export const getFeedback = catchAsync(async (req: Request, res: Response) => {
-  const result = await getFeedbackDB(req.params.id)
+const getData = catchAsync(async (req: Request, res: Response) => {
+  const result = await service.getData(req.params.id)
 
   apiResponse<iFeedback>(res, {
     success: true,
@@ -48,8 +41,8 @@ export const getFeedback = catchAsync(async (req: Request, res: Response) => {
   })
 })
 
-export const updateFeedback = catchAsync(async (req: Request, res: Response) => {
-  const result = await updateFeedbackDB(req.params.id, req.body)
+const updateData = catchAsync(async (req: Request, res: Response) => {
+  const result = await service.updateData(req.params.id, req.body)
 
   apiResponse<iFeedback>(res, {
     success: true,
@@ -59,8 +52,8 @@ export const updateFeedback = catchAsync(async (req: Request, res: Response) => 
   })
 })
 
-export const deleteFeedback = catchAsync(async (req: Request, res: Response) => {
-  const result = await deleteFeedbackDB(req.params.id)
+const deleteData = catchAsync(async (req: Request, res: Response) => {
+  const result = await service.deleteData(req.params.id)
 
   apiResponse<iFeedback>(res, {
     success: true,
@@ -69,3 +62,11 @@ export const deleteFeedback = catchAsync(async (req: Request, res: Response) => 
     data: result
   })
 })
+
+export const FeedbackController = {
+  createData,
+  getAllData,
+  getData,
+  updateData,
+  deleteData
+}

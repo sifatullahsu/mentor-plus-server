@@ -1,13 +1,13 @@
 import httpStatus from 'http-status'
+import { IQueryMaker } from 'mongoose-query-maker'
 import ApiError from '../../../error/ApiError'
 import { iMeta, iReturnWithMeta } from '../../../global/interface'
-import { iQueryBuilderReturn } from '../../../helper/queryBuilder'
-import transformObject from '../../../helper/transformObject'
+import transformObject from '../../../shared/files/transformObject'
 import Booking from '../booking/booking.model'
 import { iReview } from './review.interface'
 import Review from './review.model'
 
-export const createReviewDB = async (data: iReview): Promise<iReview> => {
+const createData = async (data: iReview): Promise<iReview> => {
   const isValid = await Booking.count({
     $and: [{ _id: data.booking }, { service: data.service }, { user: data.user }]
   })
@@ -23,33 +23,31 @@ export const createReviewDB = async (data: iReview): Promise<iReview> => {
   return result
 }
 
-export const getReviewsDB = async (data: iQueryBuilderReturn): Promise<iReturnWithMeta<iReview[]>> => {
-  const { query, pagination } = data
-  const { page, order, size, skip, sort } = pagination
+const getAllData = async (data: IQueryMaker): Promise<iReturnWithMeta<iReview[]>> => {
+  const { query, pagination, selector } = data
+  const { page, limit, skip, sort } = pagination
+  const { select, populate } = selector
 
-  const result = await Review.find(query)
-    .skip(skip)
-    .limit(size)
-    .sort({ [sort]: order })
+  const result = await Review.find(query).select(select).skip(skip).limit(limit).sort(sort).populate(populate)
 
   const count = await Review.count(query)
 
   const meta: iMeta = {
     page,
-    size,
+    limit,
     count
   }
 
   return { meta, result }
 }
 
-export const getReviewDB = async (id: string): Promise<iReview | null> => {
+const getData = async (id: string): Promise<iReview | null> => {
   const result = await Review.findById(id)
 
   return result
 }
 
-export const updateReviewDB = async (id: string, data: Partial<iReview>): Promise<iReview | null> => {
+const updateData = async (id: string, data: Partial<iReview>): Promise<iReview | null> => {
   const transform = transformObject(data)
 
   const result = await Review.findByIdAndUpdate(id, transform, {
@@ -60,8 +58,16 @@ export const updateReviewDB = async (id: string, data: Partial<iReview>): Promis
   return result
 }
 
-export const deleteReviewDB = async (id: string): Promise<iReview | null> => {
+const deleteData = async (id: string): Promise<iReview | null> => {
   const result = await Review.findByIdAndDelete(id)
 
   return result
+}
+
+export const ReviewService = {
+  createData,
+  getAllData,
+  getData,
+  updateData,
+  deleteData
 }

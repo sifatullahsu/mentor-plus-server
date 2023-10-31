@@ -6,7 +6,7 @@ export type iMongooseDate = Date
 
 export type iMeta = {
   page: number
-  size: number
+  limit: number
   count: number
 }
 

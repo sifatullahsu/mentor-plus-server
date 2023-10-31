@@ -1,5 +1,5 @@
 import { Schema, model } from 'mongoose'
-import slugMaker from '../../../helper/slugMaker'
+import slugMaker from '../../../shared/files/slugMaker'
 import { iCategory, iCategoryModel } from './category.interface'
 
 const categorySchema = new Schema<iCategory, iCategoryModel>(

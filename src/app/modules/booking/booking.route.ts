@@ -1,25 +1,24 @@
 import { Router } from 'express'
-import validateRequest from '../../middlewares/validateRequest'
-import { validateRole } from '../../middlewares/validateRole'
-import { createBooking, deleteBooking, getBooking, getBookings, updateBooking } from './booking.controller'
+import { validateRole, validateZod } from '../../middlewares'
+import { BookingController as controller } from './booking.controller'
 import { createBookingZodSchema, updateBookingZodSchema } from './booking.zod'
 
-const bookingRoute = Router()
+const router = Router()
 
-bookingRoute.post(
+router.post(
   '/',
   validateRole(['mentor', 'student']),
-  validateRequest(createBookingZodSchema),
-  createBooking
+  validateZod(createBookingZodSchema),
+  controller.createData
 )
-bookingRoute.get('/', getBookings)
-bookingRoute.get('/:id', getBooking)
-bookingRoute.patch(
+router.get('/', controller.getAllData)
+router.get('/:id', controller.getData)
+router.patch(
   '/:id',
   validateRole(['admin', 'mentor', 'student']),
-  validateRequest(updateBookingZodSchema),
-  updateBooking
+  validateZod(updateBookingZodSchema),
+  controller.updateData
 )
-bookingRoute.delete('/:id', validateRole([]), deleteBooking)
+router.delete('/:id', validateRole([]), controller.deleteData)
 
-export default bookingRoute
+export const BookingRoute = router

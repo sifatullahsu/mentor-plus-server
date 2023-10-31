@@ -1,23 +1,13 @@
 import { Request, Response } from 'express'
 import httpStatus from 'http-status'
-import createPagination, { paginationQuery } from '../../../helper/createPagination'
-import queryBuilder from '../../../helper/queryBuilder'
-import apiResponse from '../../../shared/apiResponse'
-import catchAsync from '../../../shared/catchAsync'
-import queryPicker from '../../../shared/queryPicker'
-import { serviceQueryFields } from './service.constaint'
+import { queryMaker } from 'mongoose-query-maker'
+import { apiResponse, catchAsync } from '../../../shared'
+import { serviceQuery, serviceSelector } from './service.constaint'
 import { iService } from './service.interface'
-import {
-  createServiceDB,
-  deleteServiceDB,
-  getServiceDB,
-  getServicesDB,
-  getServicesWithSearchDB,
-  updateServiceDB
-} from './service.service'
+import { ServiceService as service } from './service.service'
 
-export const createService = catchAsync(async (req: Request, res: Response) => {
-  const result = await createServiceDB(req.body)
+const createData = catchAsync(async (req: Request, res: Response) => {
+  const result = await service.createData(req.body)
 
   apiResponse<iService>(res, {
     success: true,
@@ -27,9 +17,9 @@ export const createService = catchAsync(async (req: Request, res: Response) => {
   })
 })
 
-export const getServices = catchAsync(async (req: Request, res: Response) => {
-  const query = queryBuilder(req.query, serviceQueryFields)
-  const { result, meta } = await getServicesDB(query)
+const getAllData = catchAsync(async (req: Request, res: Response) => {
+  const query = queryMaker(req.query, req.user, serviceQuery, serviceSelector)
+  const { result, meta } = await service.getAllData(query)
 
   apiResponse<iService[]>(res, {
     success: true,
@@ -40,23 +30,23 @@ export const getServices = catchAsync(async (req: Request, res: Response) => {
   })
 })
 
-export const getServicesWithSearch = catchAsync(async (req: Request, res: Response) => {
-  const pagination = createPagination(queryPicker(req.query, paginationQuery))
-  const query = queryPicker(req.query, ['search', 'min', 'max', 'category'])
+// export const getServicesWithSearch = catchAsync(async (req: Request, res: Response) => {
+//   const pagination = createPagination(queryPicker(req.query, paginationQuery))
+//   const query = queryPicker(req.query, ['search', 'min', 'max', 'category'])
 
-  const { result, meta } = await getServicesWithSearchDB(pagination, query)
+//   const { result, meta } = await getServicesWithSearchDB(pagination, query)
 
-  apiResponse<iService[]>(res, {
-    success: true,
-    status: httpStatus.OK,
-    message: 'Services fetched successfull.',
-    data: result,
-    meta
-  })
-})
+//   apiResponse<iService[]>(res, {
+//     success: true,
+//     status: httpStatus.OK,
+//     message: 'Services fetched successfull.',
+//     data: result,
+//     meta
+//   })
+// })
 
-export const getService = catchAsync(async (req: Request, res: Response) => {
-  const result = await getServiceDB(req.params.id)
+const getData = catchAsync(async (req: Request, res: Response) => {
+  const result = await service.getData(req.params.id)
 
   apiResponse<iService>(res, {
     success: true,
@@ -66,8 +56,8 @@ export const getService = catchAsync(async (req: Request, res: Response) => {
   })
 })
 
-export const updateService = catchAsync(async (req: Request, res: Response) => {
-  const result = await updateServiceDB(req.params.id, req.body)
+const updateData = catchAsync(async (req: Request, res: Response) => {
+  const result = await service.updateData(req.params.id, req.body)
 
   apiResponse<iService>(res, {
     success: true,
@@ -77,8 +67,8 @@ export const updateService = catchAsync(async (req: Request, res: Response) => {
   })
 })
 
-export const deleteService = catchAsync(async (req: Request, res: Response) => {
-  const result = await deleteServiceDB(req.params.id)
+const deleteData = catchAsync(async (req: Request, res: Response) => {
+  const result = await service.deleteData(req.params.id)
 
   apiResponse<iService>(res, {
     success: true,
@@ -87,3 +77,11 @@ export const deleteService = catchAsync(async (req: Request, res: Response) => {
     data: result
   })
 })
+
+export const ServiceController = {
+  createData,
+  getAllData,
+  getData,
+  updateData,
+  deleteData
+}

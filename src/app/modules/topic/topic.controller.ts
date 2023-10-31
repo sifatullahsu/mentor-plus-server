@@ -1,14 +1,13 @@
 import { Request, Response } from 'express'
 import httpStatus from 'http-status'
-import queryBuilder from '../../../helper/queryBuilder'
-import apiResponse from '../../../shared/apiResponse'
-import catchAsync from '../../../shared/catchAsync'
-import { topicQueryFields } from './topic.constaint'
+import { queryMaker } from 'mongoose-query-maker'
+import { apiResponse, catchAsync } from '../../../shared'
+import { topicQuery, topicSelector } from './topic.constaint'
 import { iTopic } from './topic.interface'
-import { createTopicDB, deleteTopicDB, getTopicDB, getTopicsDB, updateTopicDB } from './topic.service'
+import { TopicService as service } from './topic.service'
 
-export const createTopic = catchAsync(async (req: Request, res: Response) => {
-  const result = await createTopicDB(req.body)
+const createData = catchAsync(async (req: Request, res: Response) => {
+  const result = await service.createData(req.body)
 
   apiResponse<iTopic>(res, {
     success: true,
@@ -18,9 +17,9 @@ export const createTopic = catchAsync(async (req: Request, res: Response) => {
   })
 })
 
-export const getTopics = catchAsync(async (req: Request, res: Response) => {
-  const query = queryBuilder(req.query, topicQueryFields)
-  const { result, meta } = await getTopicsDB(query)
+const getAllData = catchAsync(async (req: Request, res: Response) => {
+  const query = queryMaker(req.query, req.user, topicQuery, topicSelector)
+  const { result, meta } = await service.getAllData(query)
 
   apiResponse<iTopic[]>(res, {
     success: true,
@@ -31,8 +30,8 @@ export const getTopics = catchAsync(async (req: Request, res: Response) => {
   })
 })
 
-export const getTopic = catchAsync(async (req: Request, res: Response) => {
-  const result = await getTopicDB(req.params.id)
+const getData = catchAsync(async (req: Request, res: Response) => {
+  const result = await service.getData(req.params.id)
 
   apiResponse<iTopic>(res, {
     success: true,
@@ -42,8 +41,8 @@ export const getTopic = catchAsync(async (req: Request, res: Response) => {
   })
 })
 
-export const updateTopic = catchAsync(async (req: Request, res: Response) => {
-  const result = await updateTopicDB(req.params.id, req.body)
+const updateData = catchAsync(async (req: Request, res: Response) => {
+  const result = await service.updateData(req.params.id, req.body)
 
   apiResponse<iTopic>(res, {
     success: true,
@@ -53,8 +52,8 @@ export const updateTopic = catchAsync(async (req: Request, res: Response) => {
   })
 })
 
-export const deleteTopic = catchAsync(async (req: Request, res: Response) => {
-  const result = await deleteTopicDB(req.params.id)
+const deleteData = catchAsync(async (req: Request, res: Response) => {
+  const result = await service.deleteData(req.params.id)
 
   apiResponse<iTopic>(res, {
     success: true,
@@ -63,3 +62,11 @@ export const deleteTopic = catchAsync(async (req: Request, res: Response) => {
     data: result
   })
 })
+
+export const TopicController = {
+  createData,
+  getAllData,
+  getData,
+  updateData,
+  deleteData
+}

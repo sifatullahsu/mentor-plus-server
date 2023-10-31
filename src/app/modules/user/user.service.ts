@@ -1,36 +1,34 @@
+import { IQueryMaker } from 'mongoose-query-maker'
 import { iMeta, iReturnWithMeta } from '../../../global/interface'
-import { iQueryBuilderReturn } from '../../../helper/queryBuilder'
-import transformObject from '../../../helper/transformObject'
+import transformObject from '../../../shared/files/transformObject'
 import { iUser } from './user.interface'
 import User from './user.model'
 
-export const getUsersDB = async (data: iQueryBuilderReturn): Promise<iReturnWithMeta<iUser[]>> => {
-  const { query, pagination } = data
-  const { page, order, size, skip, sort } = pagination
+const getAllData = async (data: IQueryMaker): Promise<iReturnWithMeta<iUser[]>> => {
+  const { query, pagination, selector } = data
+  const { page, limit, skip, sort } = pagination
+  const { select, populate } = selector
 
-  const result = await User.find(query)
-    .skip(skip)
-    .limit(size)
-    .sort({ [sort]: order })
+  const result = await User.find(query).select(select).skip(skip).limit(limit).sort(sort).populate(populate)
 
   const count = await User.count(query)
 
   const meta: iMeta = {
     page,
-    size,
+    limit,
     count
   }
 
   return { meta, result }
 }
 
-export const getUserDB = async (id: string): Promise<iUser | null> => {
+const getData = async (id: string): Promise<iUser | null> => {
   const result = await User.findById(id)
 
   return result
 }
 
-export const updateUserDB = async (id: string, data: Partial<iUser>): Promise<iUser | null> => {
+const updateData = async (id: string, data: Partial<iUser>): Promise<iUser | null> => {
   const transform = transformObject(data)
 
   const result = await User.findByIdAndUpdate(id, transform, {
@@ -39,4 +37,10 @@ export const updateUserDB = async (id: string, data: Partial<iUser>): Promise<iU
   })
 
   return result
+}
+
+export const UserService = {
+  getAllData,
+  getData,
+  updateData
 }

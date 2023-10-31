@@ -1,12 +1,12 @@
 import { Router } from 'express'
-import validateRequest from '../../middlewares/validateRequest'
+import { validateZod } from '../../middlewares'
 import { loginUser, refreshToken, registerUser } from './auth.controller'
 import { loginZodSchema, refreshTokenZodSchema, registerZodSchema } from './auth.zod'
 
-const authRoute = Router()
+const router = Router()
 
-authRoute.post('/register', validateRequest(registerZodSchema), registerUser)
-authRoute.post('/login', validateRequest(loginZodSchema), loginUser)
-authRoute.post('/refresh-token', validateRequest(refreshTokenZodSchema), refreshToken)
+router.post('/register', validateZod(registerZodSchema), registerUser)
+router.post('/login', validateZod(loginZodSchema), loginUser)
+router.post('/refresh-token', validateZod(refreshTokenZodSchema), refreshToken)
 
-export default authRoute
+export const AuthRoute = router

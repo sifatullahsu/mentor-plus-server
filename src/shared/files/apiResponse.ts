@@ -1,5 +1,5 @@
 import { Response } from 'express'
-import { iMeta } from '../global/interface'
+import { iMeta } from '../../global/interface'
 
 type iApiReponse<T> = {
   success: boolean
@@ -16,7 +16,7 @@ const apiResponse = <T>(res: Response, data: iApiReponse<T>): void => {
     message: data.message,
     meta: data?.meta && {
       page: data?.meta?.page,
-      size: data?.meta?.size,
+      limit: data?.meta?.limit,
       count: data?.meta?.count
     },
     data: data.data

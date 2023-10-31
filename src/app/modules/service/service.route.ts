@@ -1,28 +1,19 @@
 import { Router } from 'express'
-import validateRequest from '../../middlewares/validateRequest'
-import { validateRole } from '../../middlewares/validateRole'
-import {
-  createService,
-  deleteService,
-  getService,
-  getServices,
-  getServicesWithSearch,
-  updateService
-} from './service.controller'
+import { validateRole, validateZod } from '../../middlewares'
+import { ServiceController as controller } from './service.controller'
 import { createServiceZodSchema, updateServiceZodSchema } from './service.zod'
 
-const serviceRoute = Router()
+const router = Router()
 
-serviceRoute.post('/', validateRole(['mentor']), validateRequest(createServiceZodSchema), createService)
-serviceRoute.get('/', getServices)
-serviceRoute.get('/search', getServicesWithSearch)
-serviceRoute.get('/:id', getService)
-serviceRoute.patch(
+router.post('/', validateRole(['mentor']), validateZod(createServiceZodSchema), controller.createData)
+router.get('/', validateRole(['admin']), controller.getAllData)
+router.get('/:id', controller.getData)
+router.patch(
   '/:id',
   validateRole(['mentor', 'admin']),
-  validateRequest(updateServiceZodSchema),
-  updateService
+  validateZod(updateServiceZodSchema),
+  controller.updateData
 )
-serviceRoute.delete('/:id', validateRole(['mentor', 'admin']), deleteService)
+router.delete('/:id', validateRole(['mentor', 'admin']), controller.deleteData)
 
-export default serviceRoute
+export const ServiceRoute = router

@@ -1,6 +1,6 @@
 import { Schema, model } from 'mongoose'
 import { xContentStatus } from '../../../global/constant'
-import slugMaker from '../../../helper/slugMaker'
+import slugMaker from '../../../shared/files/slugMaker'
 import { iBlog, iBlogModel } from './blog.interface'
 
 const blogSchema = new Schema<iBlog, iBlogModel>(

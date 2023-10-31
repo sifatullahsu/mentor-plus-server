@@ -1,43 +1,46 @@
+import { IQueryMaker } from 'mongoose-query-maker'
 import { iMeta, iReturnWithMeta } from '../../../global/interface'
-import { iQueryBuilderReturn } from '../../../helper/queryBuilder'
-import transformObject from '../../../helper/transformObject'
+import transformObject from '../../../shared/files/transformObject'
 import { iTopic } from './topic.interface'
 import Topic from './topic.model'
 
-export const createTopicDB = async (data: iTopic): Promise<iTopic> => {
+const createData = async (data: iTopic): Promise<iTopic> => {
   const result = await Topic.create(data)
 
   return result
 }
 
-export const getTopicsDB = async (data: iQueryBuilderReturn): Promise<iReturnWithMeta<iTopic[]>> => {
-  const { query, pagination } = data
-  const { page, order, size, skip, sort } = pagination
+const getAllData = async (data: IQueryMaker): Promise<iReturnWithMeta<iTopic[]>> => {
+  const { query, pagination, selector } = data
+  const { page, limit, skip, sort } = pagination
+  const { select, populate } = selector
 
   const result = await Topic.find(query)
-    .populate('category')
+    .select(select)
+    // .populate('category')
     .skip(skip)
-    .limit(size)
-    .sort({ [sort]: order })
+    .limit(limit)
+    .sort(sort)
+    .populate(populate)
 
   const count = await Topic.count(query)
 
   const meta: iMeta = {
     page,
-    size,
+    limit,
     count
   }
 
   return { meta, result }
 }
 
-export const getTopicDB = async (id: string): Promise<iTopic | null> => {
+const getData = async (id: string): Promise<iTopic | null> => {
   const result = await Topic.findById(id).populate('category')
 
   return result
 }
 
-export const updateTopicDB = async (id: string, data: Partial<iTopic>): Promise<iTopic | null> => {
+const updateData = async (id: string, data: Partial<iTopic>): Promise<iTopic | null> => {
   const transform = transformObject(data)
 
   const result = await Topic.findByIdAndUpdate(id, transform, {
@@ -48,8 +51,16 @@ export const updateTopicDB = async (id: string, data: Partial<iTopic>): Promise<
   return result
 }
 
-export const deleteTopicDB = async (id: string): Promise<iTopic | null> => {
+const deleteData = async (id: string): Promise<iTopic | null> => {
   const result = await Topic.findByIdAndDelete(id)
 
   return result
+}
+
+export const TopicService = {
+  createData,
+  getAllData,
+  getData,
+  updateData,
+  deleteData
 }

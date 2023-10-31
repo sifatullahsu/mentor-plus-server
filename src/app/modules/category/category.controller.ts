@@ -1,20 +1,13 @@
 import { Request, Response } from 'express'
 import httpStatus from 'http-status'
-import queryBuilder from '../../../helper/queryBuilder'
-import apiResponse from '../../../shared/apiResponse'
-import catchAsync from '../../../shared/catchAsync'
-import { categoryQueryField } from './category.constant'
+import { queryMaker } from 'mongoose-query-maker'
+import { apiResponse, catchAsync } from '../../../shared'
+import { categoryQuery, categorySelector } from './category.constant'
 import { iCategory } from './category.interface'
-import {
-  createCategoryDB,
-  deleteCategoryDB,
-  getCategoriesDB,
-  getCategoryDB,
-  updateCategoryDB
-} from './category.service'
+import { CategoryService as service } from './category.service'
 
-export const createCategory = catchAsync(async (req: Request, res: Response) => {
-  const result = await createCategoryDB(req.body)
+const createData = catchAsync(async (req: Request, res: Response) => {
+  const result = await service.createData(req.body)
 
   apiResponse<iCategory>(res, {
     success: true,
@@ -24,9 +17,9 @@ export const createCategory = catchAsync(async (req: Request, res: Response) => 
   })
 })
 
-export const getCategories = catchAsync(async (req: Request, res: Response) => {
-  const query = queryBuilder(req.query, categoryQueryField)
-  const { result, meta } = await getCategoriesDB(query)
+const getAllData = catchAsync(async (req: Request, res: Response) => {
+  const query = queryMaker(req.query, req.user, categoryQuery, categorySelector)
+  const { result, meta } = await service.getAllData(query)
 
   apiResponse<iCategory[]>(res, {
     success: true,
@@ -37,8 +30,8 @@ export const getCategories = catchAsync(async (req: Request, res: Response) => {
   })
 })
 
-export const getCategory = catchAsync(async (req: Request, res: Response) => {
-  const result = await getCategoryDB(req.params.id)
+const getData = catchAsync(async (req: Request, res: Response) => {
+  const result = await service.getData(req.params.id)
 
   apiResponse<iCategory>(res, {
     success: true,
@@ -48,8 +41,8 @@ export const getCategory = catchAsync(async (req: Request, res: Response) => {
   })
 })
 
-export const updateCategory = catchAsync(async (req: Request, res: Response) => {
-  const result = await updateCategoryDB(req.params.id, req.body)
+const updateData = catchAsync(async (req: Request, res: Response) => {
+  const result = await service.updateData(req.params.id, req.body)
 
   apiResponse<iCategory>(res, {
     success: true,
@@ -59,8 +52,8 @@ export const updateCategory = catchAsync(async (req: Request, res: Response) => 
   })
 })
 
-export const deleteCategory = catchAsync(async (req: Request, res: Response) => {
-  const result = await deleteCategoryDB(req.params.id)
+const deleteData = catchAsync(async (req: Request, res: Response) => {
+  const result = await service.deleteData(req.params.id)
 
   apiResponse<iCategory>(res, {
     success: true,
@@ -69,3 +62,11 @@ export const deleteCategory = catchAsync(async (req: Request, res: Response) => 
     data: result
   })
 })
+
+export const CategoryController = {
+  createData,
+  getAllData,
+  getData,
+  updateData,
+  deleteData
+}

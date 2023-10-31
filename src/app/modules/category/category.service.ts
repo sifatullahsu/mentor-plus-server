@@ -1,42 +1,45 @@
+import { IQueryMaker } from 'mongoose-query-maker'
 import { iMeta, iReturnWithMeta } from '../../../global/interface'
-import { iQueryBuilderReturn } from '../../../helper/queryBuilder'
-import transformObject from '../../../helper/transformObject'
+import transformObject from '../../../shared/files/transformObject'
 import { iCategory } from './category.interface'
 import Category from './category.model'
 
-export const createCategoryDB = async (data: iCategory): Promise<iCategory> => {
+const createData = async (data: iCategory): Promise<iCategory> => {
   const result = await Category.create(data)
 
   return result
 }
 
-export const getCategoriesDB = async (data: iQueryBuilderReturn): Promise<iReturnWithMeta<iCategory[]>> => {
-  const { query, pagination } = data
-  const { page, order, size, skip, sort } = pagination
+const getAllData = async (data: IQueryMaker): Promise<iReturnWithMeta<iCategory[]>> => {
+  const { query, pagination, selector } = data
+  const { page, limit, skip, sort } = pagination
+  const { select, populate } = selector
 
   const result = await Category.find(query)
+    .select(select)
     .skip(skip)
-    .limit(size)
-    .sort({ [sort]: order })
+    .limit(limit)
+    .sort(sort)
+    .populate(populate)
 
   const count = await Category.count(query)
 
   const meta: iMeta = {
     page,
-    size,
+    limit,
     count
   }
 
   return { meta, result }
 }
 
-export const getCategoryDB = async (id: string): Promise<iCategory | null> => {
+const getData = async (id: string): Promise<iCategory | null> => {
   const result = await Category.findById(id)
 
   return result
 }
 
-export const updateCategoryDB = async (id: string, data: Partial<iCategory>): Promise<iCategory | null> => {
+const updateData = async (id: string, data: Partial<iCategory>): Promise<iCategory | null> => {
   const transform = transformObject(data)
 
   const result = await Category.findByIdAndUpdate(id, transform, {
@@ -47,8 +50,16 @@ export const updateCategoryDB = async (id: string, data: Partial<iCategory>): Pr
   return result
 }
 
-export const deleteCategoryDB = async (id: string): Promise<iCategory | null> => {
+const deleteData = async (id: string): Promise<iCategory | null> => {
   const result = await Category.findByIdAndDelete(id)
 
   return result
+}
+
+export const CategoryService = {
+  createData,
+  getAllData,
+  getData,
+  updateData,
+  deleteData
 }

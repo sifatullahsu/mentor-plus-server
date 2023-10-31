@@ -1628,6 +1628,11 @@ mongodb@5.9.0:
   optionalDependencies:
     "@mongodb-js/saslprep" "^1.1.0"
 
+mongoose-query-maker@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/mongoose-query-maker/-/mongoose-query-maker-2.0.0.tgz#53f014954cdb5d3305adbaa6984baac2f51bf01c"
+  integrity sha512-npnt38xmW0CLDRdcztNuDYufYyEO+PaLRzrr7+WzXm4eeTerH0+Xd93Ra7UGzT/0US/gImbwcw2fM56zwgejuA==
+
 mongoose@^7.6.1:
   version "7.6.1"
   resolved "https://registry.yarnpkg.com/mongoose/-/mongoose-7.6.1.tgz#39e4d25af26d0399468d4c0ac7373c4a8a838e3e"

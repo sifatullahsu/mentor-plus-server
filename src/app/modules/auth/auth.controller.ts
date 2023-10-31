@@ -1,7 +1,6 @@
 import { Request, Response } from 'express'
 import httpStatus from 'http-status'
-import apiResponse from '../../../shared/apiResponse'
-import catchAsync from '../../../shared/catchAsync'
+import { apiResponse, catchAsync } from '../../../shared'
 import { iUser } from '../user/user.interface'
 import { iAuth, iRefreshTokenReturn } from './auth.interface'
 import { loginUserDB, refreshTokenrDB, registerUserDB } from './auth.service'

@@ -1,14 +1,13 @@
 import { Request, Response } from 'express'
 import httpStatus from 'http-status'
-import queryBuilder from '../../../helper/queryBuilder'
-import apiResponse from '../../../shared/apiResponse'
-import catchAsync from '../../../shared/catchAsync'
-import { reviewQueryFields } from './review.constaint'
+import { queryMaker } from 'mongoose-query-maker'
+import { apiResponse, catchAsync } from '../../../shared'
+import { reviewQuery, reviewSelector } from './review.constaint'
 import { iReview } from './review.interface'
-import { createReviewDB, deleteReviewDB, getReviewDB, getReviewsDB, updateReviewDB } from './review.service'
+import { ReviewService as service } from './review.service'
 
-export const createReview = catchAsync(async (req: Request, res: Response) => {
-  const result = await createReviewDB(req.body)
+const createData = catchAsync(async (req: Request, res: Response) => {
+  const result = await service.createData(req.body)
 
   apiResponse<iReview>(res, {
     success: true,
@@ -18,9 +17,9 @@ export const createReview = catchAsync(async (req: Request, res: Response) => {
   })
 })
 
-export const getReviews = catchAsync(async (req: Request, res: Response) => {
-  const query = queryBuilder(req.query, reviewQueryFields)
-  const { result, meta } = await getReviewsDB(query)
+const getAllData = catchAsync(async (req: Request, res: Response) => {
+  const query = queryMaker(req.query, req.user, reviewQuery, reviewSelector)
+  const { result, meta } = await service.getAllData(query)
 
   apiResponse<iReview[]>(res, {
     success: true,
@@ -31,8 +30,8 @@ export const getReviews = catchAsync(async (req: Request, res: Response) => {
   })
 })
 
-export const getReview = catchAsync(async (req: Request, res: Response) => {
-  const result = await getReviewDB(req.params.id)
+const getData = catchAsync(async (req: Request, res: Response) => {
+  const result = await service.getData(req.params.id)
 
   apiResponse<iReview>(res, {
     success: true,
@@ -42,8 +41,8 @@ export const getReview = catchAsync(async (req: Request, res: Response) => {
   })
 })
 
-export const updateReview = catchAsync(async (req: Request, res: Response) => {
-  const result = await updateReviewDB(req.params.id, req.body)
+const updateData = catchAsync(async (req: Request, res: Response) => {
+  const result = await service.updateData(req.params.id, req.body)
 
   apiResponse<iReview>(res, {
     success: true,
@@ -53,8 +52,8 @@ export const updateReview = catchAsync(async (req: Request, res: Response) => {
   })
 })
 
-export const deleteReview = catchAsync(async (req: Request, res: Response) => {
-  const result = await deleteReviewDB(req.params.id)
+const deleteData = catchAsync(async (req: Request, res: Response) => {
+  const result = await service.deleteData(req.params.id)
 
   apiResponse<iReview>(res, {
     success: true,
@@ -63,3 +62,11 @@ export const deleteReview = catchAsync(async (req: Request, res: Response) => {
     data: result
   })
 })
+
+export const ReviewController = {
+  createData,
+  getAllData,
+  getData,
+  updateData,
+  deleteData
+}

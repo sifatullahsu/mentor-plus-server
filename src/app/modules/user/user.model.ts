@@ -3,7 +3,7 @@ import { Schema, model } from 'mongoose'
 import config from '../../../config'
 
 import { xCountryCode, xGender, xRole, xStatus } from '../../../global/constant'
-import slugMaker from '../../../helper/slugMaker'
+import slugMaker from '../../../shared/files/slugMaker'
 import { iUser, iUserModel } from './user.interface'
 
 const userSchema = new Schema<iUser, iUserModel>(

@@ -1,5 +1,5 @@
 import { Schema, model } from 'mongoose'
-import slugMaker from '../../../helper/slugMaker'
+import slugMaker from '../../../shared/files/slugMaker'
 import { iTopic, iTopicModel } from './topic.interface'
 
 const topicSchema = new Schema<iTopic, iTopicModel>(

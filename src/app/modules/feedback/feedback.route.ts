@@ -1,26 +1,19 @@
 import { Router } from 'express'
-import validateRequest from '../../middlewares/validateRequest'
-import { validateRole } from '../../middlewares/validateRole'
-import {
-  createFeedback,
-  deleteFeedback,
-  getFeedback,
-  getFeedbacks,
-  updateFeedback
-} from './feedback.controller'
+import { validateRole, validateZod } from '../../middlewares'
+import { FeedbackController as controller } from './feedback.controller'
 import { createFeedbackZodSchema, updateFeedbackZodSchema } from './feedback.zod'
 
-const feedbackRoute = Router()
+const router = Router()
 
-feedbackRoute.post(
+router.post(
   '/',
   validateRole(['admin', 'mentor', 'student']),
-  validateRequest(createFeedbackZodSchema),
-  createFeedback
+  validateZod(createFeedbackZodSchema),
+  controller.createData
 )
-feedbackRoute.get('/', validateRole(['mentor', 'admin', 'student']), getFeedbacks)
-feedbackRoute.get('/:id', validateRole(['mentor', 'admin', 'student']), getFeedback)
-feedbackRoute.patch('/:id', validateRole([]), validateRequest(updateFeedbackZodSchema), updateFeedback)
-feedbackRoute.delete('/:id', validateRole([]), deleteFeedback)
+router.get('/', validateRole(['mentor', 'admin', 'student']), controller.getAllData)
+router.get('/:id', validateRole(['mentor', 'admin', 'student']), controller.getData)
+router.patch('/:id', validateRole([]), validateZod(updateFeedbackZodSchema), controller.updateData)
+router.delete('/:id', validateRole([]), controller.deleteData)
 
-export default feedbackRoute
+export const FeedbackRoute = router

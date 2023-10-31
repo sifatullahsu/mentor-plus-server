@@ -1,7 +1,7 @@
 import httpStatus from 'http-status'
 import config from '../../../config'
 import ApiError from '../../../error/ApiError'
-import { createToken, verifyToken } from '../../../helper/jwtHelper'
+import { createToken, verifyToken } from '../../../shared'
 import { iUser } from '../user/user.interface'
 import User from '../user/user.model'
 import { iAuth, iLoginReqData, iRefreshTokenReturn } from './auth.interface'

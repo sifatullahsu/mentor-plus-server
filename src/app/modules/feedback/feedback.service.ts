@@ -1,13 +1,13 @@
 import httpStatus from 'http-status'
+import { IQueryMaker } from 'mongoose-query-maker'
 import ApiError from '../../../error/ApiError'
 import { iMeta, iReturnWithMeta } from '../../../global/interface'
-import { iQueryBuilderReturn } from '../../../helper/queryBuilder'
-import transformObject from '../../../helper/transformObject'
+import transformObject from '../../../shared/files/transformObject'
 import User from '../user/user.model'
 import { iFeedback } from './feedback.interface'
 import Feedback from './feedback.model'
 
-export const createFeedbackDB = async (data: iFeedback): Promise<iFeedback> => {
+const createData = async (data: iFeedback): Promise<iFeedback> => {
   const isUserValid = await User.count({ _id: data.user })
   if (!isUserValid) throw new ApiError(httpStatus.BAD_REQUEST, 'User id not valid')
 
@@ -16,33 +16,36 @@ export const createFeedbackDB = async (data: iFeedback): Promise<iFeedback> => {
   return result
 }
 
-export const getFeedbacksDB = async (data: iQueryBuilderReturn): Promise<iReturnWithMeta<iFeedback[]>> => {
-  const { query, pagination } = data
-  const { page, order, size, skip, sort } = pagination
+const getAllData = async (data: IQueryMaker): Promise<iReturnWithMeta<iFeedback[]>> => {
+  const { query, pagination, selector } = data
+  const { page, limit, skip, sort } = pagination
+  const { select, populate } = selector
 
   const result = await Feedback.find(query)
+    .select(select)
     .skip(skip)
-    .limit(size)
-    .sort({ [sort]: order })
+    .limit(limit)
+    .sort(sort)
+    .populate(populate)
 
   const count = await Feedback.count(query)
 
   const meta: iMeta = {
     page,
-    size,
+    limit,
     count
   }
 
   return { meta, result }
 }
 
-export const getFeedbackDB = async (id: string): Promise<iFeedback | null> => {
+const getData = async (id: string): Promise<iFeedback | null> => {
   const result = await Feedback.findById(id)
 
   return result
 }
 
-export const updateFeedbackDB = async (id: string, data: Partial<iFeedback>): Promise<iFeedback | null> => {
+const updateData = async (id: string, data: Partial<iFeedback>): Promise<iFeedback | null> => {
   const transform = transformObject(data)
 
   const result = await Feedback.findByIdAndUpdate(id, transform, {
@@ -53,8 +56,16 @@ export const updateFeedbackDB = async (id: string, data: Partial<iFeedback>): Pr
   return result
 }
 
-export const deleteFeedbackDB = async (id: string): Promise<iFeedback | null> => {
+const deleteData = async (id: string): Promise<iFeedback | null> => {
   const result = await Feedback.findByIdAndDelete(id)
 
   return result
+}
+
+export const FeedbackService = {
+  createData,
+  getAllData,
+  getData,
+  updateData,
+  deleteData
 }

@@ -1,7 +1,7 @@
 import cors from 'cors'
 import express, { Application, Request, Response } from 'express'
 import httpStatus from 'http-status'
-import errorHandler from './app/middlewares/errorHandler'
+import { errorHandler, reqUser } from './app/middlewares'
 import AppRouter from './app/routes'
 
 const app: Application = express()
@@ -11,7 +11,7 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
 // Global Application Routes
-app.use('/', AppRouter)
+app.use('/', reqUser(), AppRouter)
 
 // Global Error Handler
 app.use(errorHandler)

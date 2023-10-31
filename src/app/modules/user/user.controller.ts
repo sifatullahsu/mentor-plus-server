@@ -1,15 +1,14 @@
 import { Request, Response } from 'express'
 import httpStatus from 'http-status'
-import queryBuilder from '../../../helper/queryBuilder'
-import apiResponse from '../../../shared/apiResponse'
-import catchAsync from '../../../shared/catchAsync'
-import { userQueryFields } from './user.constaint'
+import { queryMaker } from 'mongoose-query-maker'
+import { apiResponse, catchAsync } from '../../../shared'
+import { userQuery, userSelector } from './user.constaint'
 import { iUser } from './user.interface'
-import { getUserDB, getUsersDB, updateUserDB } from './user.service'
+import { UserService as service } from './user.service'
 
-export const getUsers = catchAsync(async (req: Request, res: Response) => {
-  const query = queryBuilder(req.query, userQueryFields)
-  const { result, meta } = await getUsersDB(query)
+const getAllData = catchAsync(async (req: Request, res: Response) => {
+  const query = queryMaker(req.query, req.user, userQuery, userSelector)
+  const { result, meta } = await service.getAllData(query)
 
   apiResponse<iUser[]>(res, {
     success: true,
@@ -20,8 +19,8 @@ export const getUsers = catchAsync(async (req: Request, res: Response) => {
   })
 })
 
-export const getUser = catchAsync(async (req: Request, res: Response) => {
-  const result = await getUserDB(req.params.id)
+const getData = catchAsync(async (req: Request, res: Response) => {
+  const result = await service.getData(req.params.id)
 
   apiResponse<iUser>(res, {
     success: true,
@@ -31,8 +30,8 @@ export const getUser = catchAsync(async (req: Request, res: Response) => {
   })
 })
 
-export const updateUser = catchAsync(async (req: Request, res: Response) => {
-  const result = await updateUserDB(req.params.id, req.body)
+const updateData = catchAsync(async (req: Request, res: Response) => {
+  const result = await service.updateData(req.params.id, req.body)
 
   apiResponse<iUser>(res, {
     success: true,
@@ -41,3 +40,9 @@ export const updateUser = catchAsync(async (req: Request, res: Response) => {
     data: result
   })
 })
+
+export const UserController = {
+  getAllData,
+  getData,
+  updateData
+}

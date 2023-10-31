@@ -1,18 +1,17 @@
 import { Router } from 'express'
-import validateRequest from '../../middlewares/validateRequest'
-import { validateRole } from '../../middlewares/validateRole'
-import { getUser, getUsers, updateUser } from './user.controller'
+import { validateRole, validateZod } from '../../middlewares'
+import { UserController as controller } from './user.controller'
 import { updateUserZodSchema } from './user.zod'
 
-const userRoute = Router()
+const router = Router()
 
-userRoute.get('/', getUsers)
-userRoute.get('/:id', getUser)
-userRoute.patch(
+router.get('/', controller.getAllData)
+router.get('/:id', controller.getData)
+router.patch(
   '/:id',
   validateRole(['student', 'mentor', 'admin', 'super_admin']),
-  validateRequest(updateUserZodSchema),
-  updateUser
+  validateZod(updateUserZodSchema),
+  controller.updateData
 )
 
-export default userRoute
+export const UserRoute = router

@@ -1,20 +1,19 @@
 import { Router } from 'express'
-import validateRequest from '../../middlewares/validateRequest'
-import { validateRole } from '../../middlewares/validateRole'
-import { createReview, deleteReview, getReview, getReviews, updateReview } from './review.controller'
+import { validateRole, validateZod } from '../../middlewares'
+import { ReviewController as controller } from './review.controller'
 import { createReviewZodSchema, updateReviewZodSchema } from './review.zod'
 
-const reviewRoute = Router()
+const router = Router()
 
-reviewRoute.post(
+router.post(
   '/',
   validateRole(['mentor', 'student']),
-  validateRequest(createReviewZodSchema),
-  createReview
+  validateZod(createReviewZodSchema),
+  controller.createData
 )
-reviewRoute.get('/', getReviews)
-reviewRoute.get('/:id', getReview)
-reviewRoute.patch('/:id', validateRole([]), validateRequest(updateReviewZodSchema), updateReview)
-reviewRoute.delete('/:id', validateRole([]), deleteReview)
+router.get('/', controller.getAllData)
+router.get('/:id', controller.getData)
+router.patch('/:id', validateRole([]), validateZod(updateReviewZodSchema), controller.updateData)
+router.delete('/:id', validateRole([]), controller.deleteData)
 
-export default reviewRoute
+export const ReviewRoute = router

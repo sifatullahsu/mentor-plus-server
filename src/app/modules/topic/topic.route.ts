@@ -1,14 +1,14 @@
 import { Router } from 'express'
-import validateRequest from '../../middlewares/validateRequest'
-import { createTopic, deleteTopic, getTopic, getTopics, updateTopic } from './topic.controller'
+import { validateZod } from '../../middlewares'
+import { TopicController as controller } from './topic.controller'
 import { createTopicZodSchema, updateTopicZodSchema } from './topic.zod'
 
-const topicRoute = Router()
+const router = Router()
 
-topicRoute.post('/', validateRequest(createTopicZodSchema), createTopic)
-topicRoute.get('/', getTopics)
-topicRoute.get('/:id', getTopic)
-topicRoute.patch('/:id', validateRequest(updateTopicZodSchema), updateTopic)
-topicRoute.delete('/:id', deleteTopic)
+router.post('/', validateZod(createTopicZodSchema), controller.createData)
+router.get('/', controller.getAllData)
+router.get('/:id', controller.getData)
+router.patch('/:id', validateZod(updateTopicZodSchema), controller.updateData)
+router.delete('/:id', controller.deleteData)
 
-export default topicRoute
+export const TopicRoute = router

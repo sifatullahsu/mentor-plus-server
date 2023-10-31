@@ -1,14 +1,13 @@
 import { Request, Response } from 'express'
 import httpStatus from 'http-status'
-import queryBuilder from '../../../helper/queryBuilder'
-import apiResponse from '../../../shared/apiResponse'
-import catchAsync from '../../../shared/catchAsync'
-import { blogQueryFields } from './blog.constant'
+import { queryMaker } from 'mongoose-query-maker'
+import { apiResponse, catchAsync } from '../../../shared'
+import { blogQuery, blogSelector } from './blog.constant'
 import { iBlog } from './blog.interface'
-import { createBlogDB, deleteBlogDB, getBlogDB, getBlogsDB, updateBlogDB } from './blog.service'
+import { BlogService as service } from './blog.service'
 
-export const createBlog = catchAsync(async (req: Request, res: Response) => {
-  const result = await createBlogDB(req.body)
+const createData = catchAsync(async (req: Request, res: Response) => {
+  const result = await service.createData(req.body)
 
   apiResponse<iBlog>(res, {
     success: true,
@@ -18,9 +17,9 @@ export const createBlog = catchAsync(async (req: Request, res: Response) => {
   })
 })
 
-export const getBlogs = catchAsync(async (req: Request, res: Response) => {
-  const query = queryBuilder(req.query, blogQueryFields)
-  const { result, meta } = await getBlogsDB(query)
+const getAllData = catchAsync(async (req: Request, res: Response) => {
+  const query = queryMaker(req.query, req.user, blogQuery, blogSelector)
+  const { result, meta } = await service.getAllData(query)
 
   apiResponse<iBlog[]>(res, {
     success: true,
@@ -31,8 +30,8 @@ export const getBlogs = catchAsync(async (req: Request, res: Response) => {
   })
 })
 
-export const getBlog = catchAsync(async (req: Request, res: Response) => {
-  const result = await getBlogDB(req.params.id)
+const getData = catchAsync(async (req: Request, res: Response) => {
+  const result = await service.getData(req.params.id)
 
   apiResponse<iBlog>(res, {
     success: true,
@@ -42,8 +41,8 @@ export const getBlog = catchAsync(async (req: Request, res: Response) => {
   })
 })
 
-export const updateBlog = catchAsync(async (req: Request, res: Response) => {
-  const result = await updateBlogDB(req.params.id, req.body)
+const updateData = catchAsync(async (req: Request, res: Response) => {
+  const result = await service.updateData(req.params.id, req.body)
 
   apiResponse<iBlog>(res, {
     success: true,
@@ -53,8 +52,8 @@ export const updateBlog = catchAsync(async (req: Request, res: Response) => {
   })
 })
 
-export const deleteBlog = catchAsync(async (req: Request, res: Response) => {
-  const result = await deleteBlogDB(req.params.id)
+const deleteData = catchAsync(async (req: Request, res: Response) => {
+  const result = await service.deleteData(req.params.id)
 
   apiResponse<iBlog>(res, {
     success: true,
@@ -63,3 +62,11 @@ export const deleteBlog = catchAsync(async (req: Request, res: Response) => {
     data: result
   })
 })
+
+export const BlogController = {
+  createData,
+  getAllData,
+  getData,
+  updateData,
+  deleteData
+}
