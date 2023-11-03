@@ -6,7 +6,7 @@ import { createServiceZodSchema, updateServiceZodSchema } from './service.zod'
 const router = Router()
 
 router.post('/', validateRole(['mentor']), validateZod(createServiceZodSchema), controller.createData)
-router.get('/', validateRole(['admin']), controller.getAllData)
+router.get('/', controller.getAllData)
 router.get('/:id', controller.getData)
 router.patch(
   '/:id',

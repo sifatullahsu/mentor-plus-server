@@ -13,5 +13,8 @@ export const blogQuery: IQueryMakerFields<iBlog, iRole> = {
 
 export const blogSelector: IQuerySelectorFields = {
   select: [],
-  populate: []
+  populate: [
+    ['user', ['password']],
+    ['category', []]
+  ]
 }
