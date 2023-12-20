@@ -13,6 +13,10 @@ const config = {
     refreshSecret: process.env.JWT_REFRESH_SECRET,
     expiresIn: process.env.JWT_EXPIRES_IN,
     refreshExpiresIn: process.env.JWT_REFRESH_EXPIRES_IN
+  },
+  stripe: {
+    private: process.env.STRIPE_PK,
+    secret: process.env.STRIPE_SK
   }
 }
 

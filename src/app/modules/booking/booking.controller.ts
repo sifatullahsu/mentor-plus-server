@@ -63,10 +63,22 @@ const deleteData = catchAsync(async (req: Request, res: Response) => {
   })
 })
 
+const paymentIntent = catchAsync(async (req: Request, res: Response) => {
+  const result = await service.paymentIntent(req.body)
+
+  apiResponse<Record<string, string | null>>(res, {
+    success: true,
+    status: httpStatus.OK,
+    message: 'PaymentIntent created.',
+    data: result
+  })
+})
+
 export const BookingController = {
   createData,
   getAllData,
   getData,
   updateData,
-  deleteData
+  deleteData,
+  paymentIntent
 }

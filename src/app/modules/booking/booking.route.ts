@@ -20,5 +20,6 @@ router.patch(
   controller.updateData
 )
 router.delete('/:id', validateRole([]), controller.deleteData)
+router.post('/create-payment-intent', controller.paymentIntent)
 
 export const BookingRoute = router

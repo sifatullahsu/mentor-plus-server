@@ -1,5 +1,7 @@
 import httpStatus from 'http-status'
 import { IQueryMaker } from 'mongoose-query-maker'
+import stripePackage from 'stripe'
+import config from '../../../config'
 import ApiError from '../../../error/ApiError'
 import { iMeta, iReturnWithMeta } from '../../../global/interface'
 import transformObject from '../../../shared/files/transformObject'
@@ -97,10 +99,26 @@ const deleteData = async (id: string): Promise<iBooking | null> => {
   return result
 }
 
+const paymentIntent = async (data: Pick<iBooking, 'price'>): Promise<Record<string, string | null>> => {
+  const stripe = new stripePackage(config.stripe.secret as string)
+
+  const paymentIntent = await stripe.paymentIntents.create({
+    amount: data.price * 100,
+    currency: 'usd',
+    payment_method_types: ['card']
+  })
+
+  return {
+    publishableKey: config.stripe.private as string,
+    clientSecret: paymentIntent.client_secret
+  }
+}
+
 export const BookingService = {
   createData,
   getAllData,
   getData,
   updateData,
-  deleteData
+  deleteData,
+  paymentIntent
 }
